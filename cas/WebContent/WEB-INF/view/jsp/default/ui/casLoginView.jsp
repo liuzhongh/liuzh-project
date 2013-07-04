@@ -23,9 +23,8 @@
 <%@page import="org.jasig.cas.authentication.principal.UsernamePasswordCredentials"%>
 <%@page import="org.springframework.binding.message.MessageContext"%>
 <%@page import="org.springframework.webflow.execution.RequestContextHolder"%>
-<%@page import="org.springframework.web.context.request.SessionScope"%>
 <%
-	final String redirectUrl = "http://127.0.0.1:8090/trans/loginMain.html";
+	final String redirectUrl = "http://www.cassso.com:8090/trans/loginMain.html";
 
 	MessageContext messageContext = RequestContextHolder.getRequestContext().getMessageContext();
 	UsernamePasswordCredentials credentials = (UsernamePasswordCredentials) RequestContextHolder.getRequestContext().getFlowScope().get("credentials");
