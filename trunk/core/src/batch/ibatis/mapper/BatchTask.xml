@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<!-- 
+ **
+ * COPYRIGHT (C) 2012 3KW. ALL RIGHTS RESERVED.
+ *
+ * No part of this publication may be reproduced, stored in a retrieval system,
+ * or transmitted, on any form or by any means, electronic, mechanical, photocopying,
+ * recording, or otherwise, without the prior written permission of 3KW.
+ *
+ * Created By: Liuzh
+ * Created On: 2013-3-23 14:34:23
+ *
+ * Amendment History:
+ * 
+ * Amended By       Amended On      Amendment Description
+ * ************     ***********     *********************************************
+ *
+ **
+ -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shangkang.mapper.BatchTaskMapper">
+	<resultMap id="BatchTaskResultMapper" type="BatchTask">
+		<result column="TASK_OID" property="taskOid"/>
+		<result column="JOB_OID" property="jobOid"/>
+		<result column="TASK_PARAMETER_KEY" property="taskParameterKey"/>
+		<result column="JOB_EXECUTE_CLASS" property="jobExecuteClass"/>
+		<result column="JOB_EXECUTE_METHOD" property="jobExecuteMethod"/>
+		<result column="TASK_PARAMETER" property="taskParameter"/>
+		<result column="EXECUTE_STATUS" property="executeStatus"/>
+		<result column="EXECUTE_START_TIME" property="executeStartTime"/>
+		<result column="EXECUTE_END_TIME" property="executeEndTime"/>
+		<result column="EXECUTE_TIMES" property="executeTimes"/>
+		<result column="CREATE_BY" property="createBy"/>
+		<result column="CREATE_DATE" property="createDate"/>
+		<result column="UPDATE_BY" property="updateBy"/>
+		<result column="UPDATE_DATE" property="updateDate"/>
+	</resultMap>
+	
+	<sql id="commonColumns">
+		 TASK_OID
+		, JOB_OID
+		, TASK_PARAMETER_KEY
+		, JOB_EXECUTE_CLASS
+		, JOB_EXECUTE_METHOD
+		, TASK_PARAMETER
+		, EXECUTE_STATUS
+		, EXECUTE_START_TIME
+		, EXECUTE_END_TIME
+		, EXECUTE_TIMES
+		, CREATE_BY
+		, CREATE_DATE
+		, UPDATE_BY
+		, UPDATE_DATE
+	</sql>
+	
+	<sql id="commonProcessDateColumns">
+		 TASK_OID
+		, JOB_OID
+		, TASK_PARAMETER_KEY
+		, JOB_EXECUTE_CLASS
+		, JOB_EXECUTE_METHOD
+		, TASK_PARAMETER
+		, EXECUTE_STATUS
+		, to_char(EXECUTE_START_TIME, 'yyyy-mm-dd hh24:mi:ss') EXECUTE_START_TIME
+		, to_char(EXECUTE_END_TIME, 'yyyy-mm-dd hh24:mi:ss') EXECUTE_END_TIME
+		, EXECUTE_TIMES
+		, CREATE_BY
+		, to_char(CREATE_DATE, 'yyyy-mm-dd hh24:mi:ss') CREATE_DATE
+		, UPDATE_BY
+		, to_char(UPDATE_DATE, 'yyyy-mm-dd hh24:mi:ss') UPDATE_DATE
+	</sql>
+	
+	<sql id="commonCondition">
+		<if test="taskOid!= null and taskOid!= ''"> 
+			AND TASK_OID=#{taskOid}
+		</if>
+		<if test="jobOid!= null and jobOid!= ''"> 
+			AND JOB_OID=#{jobOid}
+		</if>
+		<if test="taskParameterKey!= null and taskParameterKey!= ''"> 
+			AND TASK_PARAMETER_KEY=#{taskParameterKey}
+		</if>
+		<if test="jobExecuteClass!= null and jobExecuteClass!= ''"> 
+			AND JOB_EXECUTE_CLASS=#{jobExecuteClass}
+		</if>
+		<if test="jobExecuteMethod!= null and jobExecuteMethod!= ''"> 
+			AND JOB_EXECUTE_METHOD=#{jobExecuteMethod}
+		</if>
+		<if test="taskParameter!= null and taskParameter!= ''"> 
+			AND TASK_PARAMETER=#{taskParameter}
+		</if>
+		<if test="executeStatus!= null and executeStatus!= ''"> 
+			AND EXECUTE_STATUS=#{executeStatus}
+		</if>
+		<if test="executeStartTime!= null and executeStartTime!= ''"> 
+			AND EXECUTE_START_TIME=to_date(#{executeStartTime},'yyyy-mm-dd hh24:mi:ss')
+		</if>
+		<if test="executeEndTime!= null and executeEndTime!= ''"> 
+			AND EXECUTE_END_TIME=to_date(#{executeEndTime},'yyyy-mm-dd hh24:mi:ss')
+		</if>
+		<if test="executeTimes!= null and executeTimes!= ''"> 
+			AND EXECUTE_TIMES=#{executeTimes}
+		</if>
+		<if test="createBy!= null and createBy!= ''"> 
+			AND CREATE_BY=#{createBy}
+		</if>
+		<if test="createDate!= null and createDate!= ''"> 
+			AND CREATE_DATE=to_date(#{createDate},'yyyy-mm-dd hh24:mi:ss')
+		</if>
+		<if test="updateBy!= null and updateBy!= ''"> 
+			AND UPDATE_BY=#{updateBy}
+		</if>
+		<if test="updateDate!= null and updateDate!= ''"> 
+			AND UPDATE_DATE=to_date(#{updateDate},'yyyy-mm-dd hh24:mi:ss')
+		</if>
+	</sql>
+	
+	<insert id="save" parameterType="BatchTask">
+	  <selectKey resultType="java.lang.Long" keyProperty="taskOid" order="BEFORE">
+	   select SEQ_T_BATCH_TASK.nextVal
+	   from dual
+	  </selectKey>
+		<![CDATA[ INSERT INTO T_BATCH_TASK ( ]]>
+		<include refid="commonColumns"/>
+		<![CDATA[
+			) VALUES ( 
+			 #{taskOid}
+			, #{jobOid}
+			, #{taskParameterKey}
+			, #{jobExecuteClass}
+			, #{jobExecuteMethod}
+			, #{taskParameter}
+			, #{executeStatus}
+			, to_date(#{executeStartTime},'yyyy-mm-dd hh24:mi:ss')
+			, to_date(#{executeEndTime},'yyyy-mm-dd hh24:mi:ss')
+			, #{executeTimes}
+			, #{createBy}
+			, sysdate
+			, #{updateBy}
+			, sysdate
+  ) ]]>
+	</insert>
+	<update id="update" parameterType="BatchTask">
+		<![CDATA[ UPDATE T_BATCH_TASK SET 
+			 TASK_OID=#{taskOid} 
+			, JOB_OID=#{jobOid} 
+			, TASK_PARAMETER_KEY=#{taskParameterKey} 
+			, JOB_EXECUTE_CLASS=#{jobExecuteClass} 
+			, JOB_EXECUTE_METHOD=#{jobExecuteMethod} 
+			, TASK_PARAMETER=#{taskParameter} 
+			, EXECUTE_STATUS=#{executeStatus} 
+			, EXECUTE_START_TIME=to_date(#{executeStartTime},'yyyy-mm-dd hh24:mi:ss')
+			, EXECUTE_END_TIME=sysdate
+			, EXECUTE_TIMES=#{executeTimes} 
+			, CREATE_BY=#{createBy} 
+			, CREATE_DATE=to_date(#{createDate},'yyyy-mm-dd hh24:mi:ss')
+			, UPDATE_BY=#{updateBy} 
+			, UPDATE_DATE=sysdate
+		WHERE TASK_OID = #{taskOid}  ]]>
+	</update>
+	<delete id="deleteByPK" parameterType="java.lang.Long">
+		<![CDATA[ DELETE FROM T_BATCH_TASK WHERE TASK_OID = #{taskOid}  ]]>
+	</delete>
+	<delete id="deleteByPKeys" parameterType="map">
+		DELETE FROM T_BATCH_TASK WHERE
+		<foreach collection="primaryKeys" index="index" item="id"
+			open=" TASK_OID IN(" separator="," close=") ">
+			${id}
+		</foreach>
+	</delete>
+	<delete id="deleteByProperty" parameterType="BatchTask">
+		DELETE FROM T_BATCH_TASK WHERE 1 = 1
+		<include refid="commonCondition"/>
+	</delete>
+	<select id="getByPK" parameterType="java.lang.Long" resultMap="BatchTaskResultMapper">
+		<![CDATA[ SELECT ]]>
+			 <include refid="commonProcessDateColumns"/>
+		FROM T_BATCH_TASK WHERE TASK_OID = #{taskOid}  
+	</select>
+	<select id="list" resultMap="BatchTaskResultMapper">
+		<![CDATA[ SELECT ]]>
+			 <include refid="commonProcessDateColumns"/>
+ 		FROM T_BATCH_TASK
+	</select>
+	<select id="listByProperty" parameterType="BatchTask" resultMap="BatchTaskResultMapper">
+		<![CDATA[ SELECT ]]>
+			<include refid="commonProcessDateColumns"/>
+		FROM T_BATCH_TASK WHERE 1=1 
+		<include refid="commonCondition"/>
+	</select>
+	<select id="listBatchTaskByJobOidAndStatus" parameterType="map" resultMap="BatchTaskResultMapper">
+		<![CDATA[ SELECT ]]>
+			<include refid="commonProcessDateColumns"/>
+		<![CDATA[FROM T_BATCH_TASK WHERE 1=1 AND JOB_OID = #{jobOid} ]]>
+		<foreach collection="status" index="index" item="id" open=" AND EXECUTE_STATUS IN("
+			separator="," close=") ">
+			'${id}'
+		</foreach>
+	</select>
+	<select id="listBatchTaskByJobOidAndExceptStatus" parameterType="map" resultMap="BatchTaskResultMapper">
+		<![CDATA[ SELECT ]]>
+			<include refid="commonProcessDateColumns"/>
+		<![CDATA[FROM T_BATCH_TASK WHERE 1=1 AND JOB_OID = #{jobOid} ]]>
+		<foreach collection="status" index="index" item="id" open=" AND EXECUTE_STATUS NOT IN("
+			separator="," close=") ">
+			'${id}'
+		</foreach>
+	</select>
+	<select id="listPaginationByProperty" parameterType="BatchTask" resultMap="BatchTaskResultMapper">
+		SELECT 
+		<include refid="commonProcessDateColumns"/>
+		FROM T_BATCH_TASK WHERE 1=1 
+		<include refid="commonCondition"/>
+	</select>
+	<select id="findByCount" parameterType="BatchTask" resultType="int">
+		SELECT count(1) AS totalcount FROM T_BATCH_TASK WHERE 1=1 
+		<include refid="commonCondition"/>
+	</select>
+</mapper>

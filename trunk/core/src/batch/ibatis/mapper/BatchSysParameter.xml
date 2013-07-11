@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<!-- 
+ **
+ * COPYRIGHT (C) 2012 3KW. ALL RIGHTS RESERVED.
+ *
+ * No part of this publication may be reproduced, stored in a retrieval system,
+ * or transmitted, on any form or by any means, electronic, mechanical, photocopying,
+ * recording, or otherwise, without the prior written permission of 3KW.
+ *
+ * Created By: Liuzh
+ * Created On: 2013-3-23 14:34:25
+ *
+ * Amendment History:
+ * 
+ * Amended By       Amended On      Amendment Description
+ * ************     ***********     *********************************************
+ *
+ **
+ -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shangkang.mapper.BatchSysParameterMapper">
+	<resultMap id="BatchSysParameterResultMapper" type="BatchSysParameter">
+		<result column="BATCH_SYS_PARAMETER_OID" property="batchSysParameterOid"/>
+		<result column="BATCH_PARAMETER" property="batchParameter"/>
+		<result column="PARAMETER_VALUE" property="parameterValue"/>
+		<result column="DESCRIPTION" property="description"/>
+		<result column="CREATE_BY" property="createBy"/>
+		<result column="CREATE_DATE" property="createDate"/>
+		<result column="UPDATE_BY" property="updateBy"/>
+		<result column="UPDATE_DATE" property="updateDate"/>
+	</resultMap>
+	
+	<sql id="commonColumns">
+		 BATCH_SYS_PARAMETER_OID
+		, BATCH_PARAMETER
+		, PARAMETER_VALUE
+		, DESCRIPTION
+		, CREATE_BY
+		, CREATE_DATE
+		, UPDATE_BY
+		, UPDATE_DATE
+	</sql>
+	
+	<sql id="commonProcessDateColumns">
+		 BATCH_SYS_PARAMETER_OID
+		, BATCH_PARAMETER
+		, PARAMETER_VALUE
+		, DESCRIPTION
+		, CREATE_BY
+		, to_char(CREATE_DATE, 'yyyy-mm-dd hh24:mi:ss') CREATE_DATE
+		, UPDATE_BY
+		, to_char(UPDATE_DATE, 'yyyy-mm-dd hh24:mi:ss') UPDATE_DATE
+	</sql>
+	
+	<sql id="commonCondition">
+		<if test="batchSysParameterOid!= null and batchSysParameterOid!= ''"> 
+			AND BATCH_SYS_PARAMETER_OID=#{batchSysParameterOid}
+		</if>
+		<if test="batchParameter!= null and batchParameter!= ''"> 
+			AND BATCH_PARAMETER=#{batchParameter}
+		</if>
+		<if test="parameterValue!= null and parameterValue!= ''"> 
+			AND PARAMETER_VALUE=#{parameterValue}
+		</if>
+		<if test="description!= null and description!= ''"> 
+			AND DESCRIPTION=#{description}
+		</if>
+		<if test="createBy!= null and createBy!= ''"> 
+			AND CREATE_BY=#{createBy}
+		</if>
+		<if test="createDate!= null and createDate!= ''"> 
+			AND CREATE_DATE=to_date(#{createDate},'yyyy-mm-dd hh24:mi:ss')
+		</if>
+		<if test="updateBy!= null and updateBy!= ''"> 
+			AND UPDATE_BY=#{updateBy}
+		</if>
+		<if test="updateDate!= null and updateDate!= ''"> 
+			AND UPDATE_DATE=to_date(#{updateDate},'yyyy-mm-dd hh24:mi:ss')
+		</if>
+	</sql>
+	
+	<insert id="save" parameterType="BatchSysParameter">
+	  <selectKey resultType="java.lang.Long" keyProperty="batchSysParameterOid" order="BEFORE">
+	   select SEQ_T_BATCH_SYS_PARAMETER.nextVal
+	   from dual
+	  </selectKey>
+		<![CDATA[ INSERT INTO T_BATCH_SYS_PARAMETER ( ]]>
+		<include refid="commonColumns"/>
+		<![CDATA[
+			) VALUES ( 
+			 #{batchSysParameterOid}
+			, #{batchParameter}
+			, #{parameterValue}
+			, #{description}
+			, #{createBy}
+			, to_date(#{createDate},'yyyy-mm-dd hh24:mi:ss')
+			, #{updateBy}
+			, to_date(#{updateDate},'yyyy-mm-dd hh24:mi:ss')
+  ) ]]>
+	</insert>
+	<update id="update" parameterType="BatchSysParameter">
+		<![CDATA[ UPDATE T_BATCH_SYS_PARAMETER SET 
+			 BATCH_SYS_PARAMETER_OID=#{batchSysParameterOid} 
+			, BATCH_PARAMETER=#{batchParameter} 
+			, PARAMETER_VALUE=#{parameterValue} 
+			, DESCRIPTION=#{description} 
+			, CREATE_BY=#{createBy} 
+			, CREATE_DATE=to_date(#{createDate},'yyyy-mm-dd hh24:mi:ss')
+			, UPDATE_BY=#{updateBy} 
+			, UPDATE_DATE=to_date(#{updateDate},'yyyy-mm-dd hh24:mi:ss')
+		WHERE BATCH_SYS_PARAMETER_OID = #{batchSysParameterOid}  ]]>
+	</update>
+	<delete id="deleteByPK" parameterType="java.lang.Long">
+		<![CDATA[ DELETE FROM T_BATCH_SYS_PARAMETER WHERE BATCH_SYS_PARAMETER_OID = #{batchSysParameterOid}  ]]>
+	</delete>
+	<delete id="deleteByPKeys" parameterType="map">
+		DELETE FROM T_BATCH_SYS_PARAMETER WHERE
+		<foreach collection="primaryKeys" index="index" item="id"
+			open=" BATCH_SYS_PARAMETER_OID IN(" separator="," close=") ">
+			${id}
+		</foreach>
+	</delete>
+	<delete id="deleteByProperty" parameterType="BatchSysParameter">
+		DELETE FROM T_BATCH_SYS_PARAMETER WHERE 1 = 1
+		<include refid="commonCondition"/>
+	</delete>
+	<select id="getByPK" parameterType="java.lang.Long" resultMap="BatchSysParameterResultMapper">
+		<![CDATA[ SELECT ]]>
+			 <include refid="commonProcessDateColumns"/>
+		FROM T_BATCH_SYS_PARAMETER WHERE BATCH_SYS_PARAMETER_OID = #{batchSysParameterOid}  
+	</select>
+	<select id="list" resultMap="BatchSysParameterResultMapper">
+		<![CDATA[ SELECT ]]>
+			 <include refid="commonProcessDateColumns"/>
+ 		FROM T_BATCH_SYS_PARAMETER
+	</select>
+	<select id="listByProperty" parameterType="BatchSysParameter" resultMap="BatchSysParameterResultMapper">
+		<![CDATA[ SELECT ]]>
+			<include refid="commonProcessDateColumns"/>
+		FROM T_BATCH_SYS_PARAMETER WHERE 1=1 
+		<include refid="commonCondition"/>
+	</select>
+	<select id="listPaginationByProperty" parameterType="BatchSysParameter" resultMap="BatchSysParameterResultMapper">
+		SELECT 
+		<include refid="commonProcessDateColumns"/>
+		FROM T_BATCH_SYS_PARAMETER WHERE 1=1 
+		<include refid="commonCondition"/>
+	</select>
+	<select id="getParameterValueByParameter" parameterType="string" resultType="string">
+		SELECT BPS.PARAMETER_VALUE FROM T_BATCH_SYS_PARAMETER BPS where BPS.BATCH_PARAMETER = #{batchParameter}
+	</select>
+	<select id="findByCount" parameterType="BatchSysParameter" resultType="int">
+		SELECT count(1) AS totalcount FROM T_BATCH_SYS_PARAMETER WHERE 1=1 
+		<include refid="commonCondition"/>
+	</select>
+</mapper>

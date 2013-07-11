@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<!-- 
+ **
+ * COPYRIGHT (C) 2012 3KW. ALL RIGHTS RESERVED.
+ *
+ * No part of this publication may be reproduced, stored in a retrieval system,
+ * or transmitted, on any form or by any means, electronic, mechanical, photocopying,
+ * recording, or otherwise, without the prior written permission of 3KW.
+ *
+ * Created By: Liuzh
+ * Created On: 2013-3-23 14:34:24
+ *
+ * Amendment History:
+ * 
+ * Amended By       Amended On      Amendment Description
+ * ************     ***********     *********************************************
+ *
+ **
+ -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shangkang.mapper.BatchJobLogMapper">
+	<resultMap id="BatchJobLogResultMapper" type="BatchJobLog">
+		<result column="JOB_LOG_OID" property="jobLogOid"/>
+		<result column="JOB_OID" property="jobOid"/>
+		<result column="TYPE" property="type"/>
+		<result column="STATUS" property="status"/>
+		<result column="USER_ID" property="userId"/>
+		<result column="EXECUTE_START_TIME" property="executeStartTime"/>
+		<result column="EXECUTE_END_TIME" property="executeEndTime"/>
+		<result column="EXECUTE_TIMES" property="executeTimes"/>
+		<result column="CREATE_BY" property="createBy"/>
+		<result column="CREATE_DATE" property="createDate"/>
+		<result column="UPDATE_BY" property="updateBy"/>
+		<result column="UPDATE_DATE" property="updateDate"/>
+	</resultMap>
+	
+	<sql id="commonColumns">
+		 JOB_LOG_OID
+		, JOB_OID
+		, TYPE
+		, STATUS
+		, USER_ID
+		, EXECUTE_START_TIME
+		, EXECUTE_END_TIME
+		, EXECUTE_TIMES
+		, CREATE_BY
+		, CREATE_DATE
+		, UPDATE_BY
+		, UPDATE_DATE
+	</sql>
+	
+	<sql id="commonProcessDateColumns">
+		 JOB_LOG_OID
+		, JOB_OID
+		, TYPE
+		, STATUS
+		, USER_ID
+		, to_char(EXECUTE_START_TIME, 'yyyy-mm-dd hh24:mi:ss') EXECUTE_START_TIME
+		, to_char(EXECUTE_END_TIME, 'yyyy-mm-dd hh24:mi:ss') EXECUTE_END_TIME
+		, EXECUTE_TIMES
+		, CREATE_BY
+		, to_char(CREATE_DATE, 'yyyy-mm-dd hh24:mi:ss') CREATE_DATE
+		, UPDATE_BY
+		, to_char(UPDATE_DATE, 'yyyy-mm-dd hh24:mi:ss') UPDATE_DATE
+	</sql>
+	
+	<sql id="commonCondition">
+		<if test="jobLogOid!= null and jobLogOid!= ''"> 
+			AND JOB_LOG_OID=#{jobLogOid}
+		</if>
+		<if test="jobOid!= null and jobOid!= ''"> 
+			AND JOB_OID=#{jobOid}
+		</if>
+		<if test="type!= null and type!= ''"> 
+			AND TYPE=#{type}
+		</if>
+		<if test="status!= null and status!= ''"> 
+			AND STATUS=#{status}
+		</if>
+		<if test="userId!= null and userId!= ''"> 
+			AND USER_ID=#{userId}
+		</if>
+		<if test="executeStartTime!= null and executeStartTime!= ''"> 
+			AND EXECUTE_START_TIME=to_date(#{executeStartTime},'yyyy-mm-dd hh24:mi:ss')
+		</if>
+		<if test="executeEndTime!= null and executeEndTime!= ''"> 
+			AND EXECUTE_END_TIME=to_date(#{executeEndTime},'yyyy-mm-dd hh24:mi:ss')
+		</if>
+		<if test="executeTimes!= null and executeTimes!= ''"> 
+			AND EXECUTE_TIMES=#{executeTimes}
+		</if>
+		<if test="createBy!= null and createBy!= ''"> 
+			AND CREATE_BY=#{createBy}
+		</if>
+		<if test="createDate!= null and createDate!= ''"> 
+			AND CREATE_DATE=to_date(#{createDate},'yyyy-mm-dd hh24:mi:ss')
+		</if>
+		<if test="updateBy!= null and updateBy!= ''"> 
+			AND UPDATE_BY=#{updateBy}
+		</if>
+		<if test="updateDate!= null and updateDate!= ''"> 
+			AND UPDATE_DATE=to_date(#{updateDate},'yyyy-mm-dd hh24:mi:ss')
+		</if>
+	</sql>
+	
+	<insert id="save" parameterType="BatchJobLog">
+	  <selectKey resultType="java.lang.Long" keyProperty="jobLogOid" order="BEFORE">
+	   select SEQ_T_BATCH_JOB_LOG.nextVal
+	   from dual
+	  </selectKey>
+		<![CDATA[ INSERT INTO T_BATCH_JOB_LOG ( ]]>
+		<include refid="commonColumns"/>
+		<![CDATA[
+			) VALUES ( 
+			 #{jobLogOid}
+			, #{jobOid}
+			, #{type}
+			, #{status}
+			, #{userId}
+			, to_date(#{executeStartTime},'yyyy-mm-dd hh24:mi:ss')
+			, to_date(#{executeEndTime},'yyyy-mm-dd hh24:mi:ss')
+			, #{executeTimes}
+			, #{createBy}
+			, sysdate
+			, #{updateBy}
+			, sysdate
+  ) ]]>
+	</insert>
+	<update id="update" parameterType="BatchJobLog">
+		<![CDATA[ UPDATE T_BATCH_JOB_LOG SET 
+			 JOB_LOG_OID=#{jobLogOid} 
+			, JOB_OID=#{jobOid} 
+			, TYPE=#{type} 
+			, STATUS=#{status} 
+			, USER_ID=#{userId} 
+			, EXECUTE_START_TIME=to_date(#{executeStartTime},'yyyy-mm-dd hh24:mi:ss')
+			, EXECUTE_END_TIME=to_date(#{executeEndTime},'yyyy-mm-dd hh24:mi:ss')
+			, EXECUTE_TIMES=#{executeTimes} 
+			, CREATE_BY=#{createBy} 
+			, CREATE_DATE=to_date(#{createDate},'yyyy-mm-dd hh24:mi:ss')
+			, UPDATE_BY=#{updateBy} 
+			, UPDATE_DATE=to_date(#{updateDate},'yyyy-mm-dd hh24:mi:ss')
+		WHERE JOB_LOG_OID = #{jobLogOid}  ]]>
+	</update>
+	<delete id="deleteByPK" parameterType="java.lang.Long">
+		<![CDATA[ DELETE FROM T_BATCH_JOB_LOG WHERE JOB_LOG_OID = #{jobLogOid}  ]]>
+	</delete>
+	<delete id="deleteByPKeys" parameterType="map">
+		DELETE FROM T_BATCH_JOB_LOG WHERE
+		<foreach collection="primaryKeys" index="index" item="id"
+			open=" JOB_LOG_OID IN(" separator="," close=") ">
+			${id}
+		</foreach>
+	</delete>
+	<delete id="deleteByProperty" parameterType="BatchJobLog">
+		DELETE FROM T_BATCH_JOB_LOG WHERE 1 = 1
+		<include refid="commonCondition"/>
+	</delete>
+	<select id="getByPK" parameterType="java.lang.Long" resultMap="BatchJobLogResultMapper">
+		<![CDATA[ SELECT ]]>
+			 <include refid="commonProcessDateColumns"/>
+		FROM T_BATCH_JOB_LOG WHERE JOB_LOG_OID = #{jobLogOid}  
+	</select>
+	<select id="list" resultMap="BatchJobLogResultMapper">
+		<![CDATA[ SELECT ]]>
+			 <include refid="commonProcessDateColumns"/>
+ 		FROM T_BATCH_JOB_LOG
+	</select>
+	<select id="listByProperty" parameterType="BatchJobLog" resultMap="BatchJobLogResultMapper">
+		<![CDATA[ SELECT ]]>
+			<include refid="commonProcessDateColumns"/>
+		FROM T_BATCH_JOB_LOG WHERE 1=1 
+		<include refid="commonCondition"/>
+	</select>
+	<select id="listPaginationByProperty" parameterType="BatchJobLog" resultMap="BatchJobLogResultMapper">
+		SELECT 
+		<include refid="commonProcessDateColumns"/>
+		FROM T_BATCH_JOB_LOG WHERE 1=1 
+		<include refid="commonCondition"/>
+	</select>
+	<select id="findByCount" parameterType="BatchJobLog" resultType="int">
+		SELECT count(1) AS totalcount FROM T_BATCH_JOB_LOG WHERE 1=1 
+		<include refid="commonCondition"/>
+	</select>
+</mapper>
