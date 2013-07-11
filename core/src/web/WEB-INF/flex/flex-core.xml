@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:flex="http://www.springframework.org/schema/flex"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+		http://www.springframework.org/schema/flex 
+		http://www.springframework.org/schema/flex/spring-flex-1.0.xsd">
+	<bean class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+	    <property name="mappings">
+	        <value>
+	            /*=_messageBroker
+	        </value>
+	    </property>
+	</bean>
+
+	<!-- Dispatches requests mapped to a MessageBroker -->
+	<bean class="com.shangkang.core.system.flex.DefaultMessageBrokerHandlerAdapter" />  
+
+	<flex:message-broker>
+		<flex:message-service
+			default-channels="my-amf" />
+	</flex:message-broker>
+	
+	<!-- Expose the businessFacade bean for BlazeDS remoting -->
+
+</beans>
