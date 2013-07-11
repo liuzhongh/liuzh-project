@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<!-- 
+ **
+ * COPYRIGHT (C) 2012 3KW. ALL RIGHTS RESERVED.
+ *
+ * No part of this publication may be reproduced, stored in a retrieval system,
+ * or transmitted, on any form or by any means, electronic, mechanical, photocopying,
+ * recording, or otherwise, without the prior written permission of 3KW.
+ *
+ * Created By: Liuzh
+ * Created On: 2013-3-23 14:34:25
+ *
+ * Amendment History:
+ * 
+ * Amended By       Amended On      Amendment Description
+ * ************     ***********     *********************************************
+ *
+ **
+ -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shangkang.mapper.BatchJobMapper">
+	<resultMap id="BatchJobResultMapper" type="BatchJob">
+		<result column="JOB_OID" property="jobOid"/>
+		<result column="JOB_NAME" property="jobName"/>
+		<result column="JOB_MODULE" property="jobModule"/>
+		<result column="USER_ID" property="userId"/>
+		<result column="JOB_STATUS" property="jobStatus"/>
+		<result column="JOB_PRIORITY" property="jobPriority"/>
+		<result column="JOB_EXECUTE_CLASS" property="jobExecuteClass"/>
+		<result column="JOB_EXECUTE_METHOD" property="jobExecuteMethod"/>
+		<result column="THREAD_ASSIGN_NUM" property="threadAssignNum"/>
+		<result column="TASK_TOTAL" property="taskTotal"/>
+		<result column="TASK_SUCCESS" property="taskSuccess"/>
+		<result column="TASK_FAIL" property="taskFail"/>
+		<result column="JOB_ADD_TIME" property="jobAddTime"/>
+		<result column="PLAN_EXECUTE_TIME" property="planExecuteTime"/>
+		<result column="JOB_FINISHED_TIME" property="jobFinishedTime"/>
+		<result column="DESCRIPTION" property="description"/>
+		<result column="CREATE_BY" property="createBy"/>
+		<result column="CREATE_DATE" property="createDate"/>
+		<result column="UPDATE_BY" property="updateBy"/>
+		<result column="UPDATE_DATE" property="updateDate"/>
+		<result column="JOB_TYPE" property="jobType"/>
+	</resultMap>
+	
+	<sql id="commonColumns">
+		 JOB_OID
+		, JOB_NAME
+		, JOB_MODULE
+		, USER_ID
+		, JOB_STATUS
+		, JOB_PRIORITY
+		, JOB_EXECUTE_CLASS
+		, JOB_EXECUTE_METHOD
+		, THREAD_ASSIGN_NUM
+		, TASK_TOTAL
+		, TASK_SUCCESS
+		, TASK_FAIL
+		, JOB_ADD_TIME
+		, PLAN_EXECUTE_TIME
+		, JOB_FINISHED_TIME
+		, DESCRIPTION
+		, CREATE_BY
+		, CREATE_DATE
+		, UPDATE_BY
+		, UPDATE_DATE
+		, JOB_TYPE
+	</sql>
+	
+	<sql id="commonProcessDateColumns">
+		 JOB_OID
+		, JOB_NAME
+		, JOB_MODULE
+		, USER_ID
+		, JOB_STATUS
+		, JOB_PRIORITY
+		, JOB_EXECUTE_CLASS
+		, JOB_EXECUTE_METHOD
+		, THREAD_ASSIGN_NUM
+		, TASK_TOTAL
+		, TASK_SUCCESS
+		, TASK_FAIL
+		, to_char(JOB_ADD_TIME, 'yyyy-mm-dd hh24:mi:ss') JOB_ADD_TIME
+		, PLAN_EXECUTE_TIME
+		, to_char(JOB_FINISHED_TIME, 'yyyy-mm-dd hh24:mi:ss') JOB_FINISHED_TIME
+		, DESCRIPTION
+		, CREATE_BY
+		, to_char(CREATE_DATE, 'yyyy-mm-dd hh24:mi:ss') CREATE_DATE
+		, UPDATE_BY
+		, to_char(UPDATE_DATE, 'yyyy-mm-dd hh24:mi:ss') UPDATE_DATE
+		, JOB_TYPE
+	</sql>
+	
+	<sql id="commonCondition">
+		<if test="jobOid!= null and jobOid!= ''"> 
+			AND JOB_OID=#{jobOid}
+		</if>
+		<if test="jobName!= null and jobName!= ''"> 
+			AND JOB_NAME=#{jobName}
+		</if>
+		<if test="jobModule!= null and jobModule!= ''"> 
+			AND JOB_MODULE=#{jobModule}
+		</if>
+		<if test="userId!= null and userId!= ''"> 
+			AND USER_ID=#{userId}
+		</if>
+		<if test="jobStatus!= null and jobStatus!= ''"> 
+			AND JOB_STATUS=#{jobStatus}
+		</if>
+		<if test="jobPriority!= null and jobPriority!= ''"> 
+			AND JOB_PRIORITY=#{jobPriority}
+		</if>
+		<if test="jobExecuteClass!= null and jobExecuteClass!= ''"> 
+			AND JOB_EXECUTE_CLASS=#{jobExecuteClass}
+		</if>
+		<if test="jobExecuteMethod!= null and jobExecuteMethod!= ''"> 
+			AND JOB_EXECUTE_METHOD=#{jobExecuteMethod}
+		</if>
+		<if test="threadAssignNum!= null and threadAssignNum!= ''"> 
+			AND THREAD_ASSIGN_NUM=#{threadAssignNum}
+		</if>
+		<if test="taskTotal!= null and taskTotal!= ''"> 
+			AND TASK_TOTAL=#{taskTotal}
+		</if>
+		<if test="taskSuccess!= null and taskSuccess!= ''"> 
+			AND TASK_SUCCESS=#{taskSuccess}
+		</if>
+		<if test="taskFail!= null and taskFail!= ''"> 
+			AND TASK_FAIL=#{taskFail}
+		</if>
+		<if test="jobAddTime!= null and jobAddTime!= ''"> 
+			AND JOB_ADD_TIME=to_date(#{jobAddTime},'yyyy-mm-dd hh24:mi:ss')
+		</if>
+		<if test="planExecuteTime!= null and planExecuteTime!= ''"> 
+			AND PLAN_EXECUTE_TIME=#{planExecuteTime}
+		</if>
+		<if test="jobFinishedTime!= null and jobFinishedTime!= ''"> 
+			AND JOB_FINISHED_TIME=to_date(#{jobFinishedTime},'yyyy-mm-dd hh24:mi:ss')
+		</if>
+		<if test="description!= null and description!= ''"> 
+			AND DESCRIPTION=#{description}
+		</if>
+		<if test="createBy!= null and createBy!= ''"> 
+			AND CREATE_BY=#{createBy}
+		</if>
+		<if test="createDate!= null and createDate!= ''"> 
+			AND CREATE_DATE=to_date(#{createDate},'yyyy-mm-dd hh24:mi:ss')
+		</if>
+		<if test="updateBy!= null and updateBy!= ''"> 
+			AND UPDATE_BY=#{updateBy}
+		</if>
+		<if test="updateDate!= null and updateDate!= ''"> 
+			AND UPDATE_DATE=to_date(#{updateDate},'yyyy-mm-dd hh24:mi:ss')
+		</if>
+		<if test="jobType!= null and jobType!= ''"> 
+			AND JOB_TYPE=#{jobType}
+		</if>
+	</sql>
+	
+	<insert id="save" parameterType="BatchJob">
+	  <selectKey resultType="java.lang.Long" keyProperty="jobOid" order="BEFORE">
+	   select SEQ_T_BATCH_JOB.nextVal
+	   from dual
+	  </selectKey>
+		<![CDATA[ INSERT INTO T_BATCH_JOB ( ]]>
+		<include refid="commonColumns"/>
+		<![CDATA[
+			) VALUES ( 
+			 #{jobOid}
+			, #{jobName}
+			, #{jobModule}
+			, #{userId}
+			, #{jobStatus}
+			, #{jobPriority}
+			, #{jobExecuteClass}
+			, #{jobExecuteMethod}
+			, #{threadAssignNum}
+			, #{taskTotal}
+			, #{taskSuccess}
+			, #{taskFail}
+			, sysdate
+			, #{planExecuteTime}
+			, to_date(#{jobFinishedTime},'yyyy-mm-dd hh24:mi:ss')
+			, #{description}
+			, #{createBy}
+			, sysdate
+			, #{updateBy}
+			, sysdate
+			, #{jobType}
+		  ) ]]>
+	</insert>
+	<update id="update" parameterType="BatchJob">
+		<![CDATA[ UPDATE T_BATCH_JOB SET 
+			 JOB_OID=#{jobOid} 
+			, JOB_NAME=#{jobName} 
+			, JOB_MODULE=#{jobModule} 
+			, USER_ID=#{userId} 
+			, JOB_STATUS=#{jobStatus} 
+			, JOB_PRIORITY=#{jobPriority} 
+			, JOB_EXECUTE_CLASS=#{jobExecuteClass} 
+			, JOB_EXECUTE_METHOD=#{jobExecuteMethod} 
+			, THREAD_ASSIGN_NUM=#{threadAssignNum} 
+			, TASK_TOTAL=#{taskTotal} 
+			, TASK_SUCCESS=#{taskSuccess} 
+			, TASK_FAIL=#{taskFail} 
+			, JOB_ADD_TIME=to_date(#{jobAddTime},'yyyy-mm-dd hh24:mi:ss')
+			, PLAN_EXECUTE_TIME=#{planExecuteTime}
+			, JOB_FINISHED_TIME=to_date(#{jobFinishedTime},'yyyy-mm-dd hh24:mi:ss')
+			, DESCRIPTION=#{description} 
+			, CREATE_BY=#{createBy} 
+			, CREATE_DATE=to_date(#{createDate},'yyyy-mm-dd hh24:mi:ss')
+			, UPDATE_BY=#{updateBy} 
+			, UPDATE_DATE=to_date(#{updateDate},'yyyy-mm-dd hh24:mi:ss')
+			, JOB_TYPE=#{jobType}
+		WHERE JOB_OID = #{jobOid}  ]]>
+	</update>
+	<delete id="deleteByPK" parameterType="java.lang.Long">
+		<![CDATA[ DELETE FROM T_BATCH_JOB WHERE JOB_OID = #{jobOid}  ]]>
+	</delete>
+	<delete id="deleteByPKeys" parameterType="map">
+		DELETE FROM T_BATCH_JOB WHERE
+		<foreach collection="primaryKeys" index="index" item="id"
+			open=" JOB_OID IN(" separator="," close=") ">
+			${id}
+		</foreach>
+	</delete>
+	<delete id="deleteByProperty" parameterType="BatchJob">
+		DELETE FROM T_BATCH_JOB WHERE 1 = 1
+		<include refid="commonCondition"/>
+	</delete>
+	<select id="getByPK" parameterType="java.lang.Long" resultMap="BatchJobResultMapper">
+		<![CDATA[ SELECT ]]>
+			 <include refid="commonProcessDateColumns"/>
+		FROM T_BATCH_JOB WHERE JOB_OID = #{jobOid}  
+	</select>
+	<select id="list" resultMap="BatchJobResultMapper">
+		<![CDATA[ SELECT ]]>
+			 <include refid="commonProcessDateColumns"/>
+ 		FROM T_BATCH_JOB
+	</select>
+	<select id="listByProperty" parameterType="BatchJob" resultMap="BatchJobResultMapper">
+		<![CDATA[ SELECT ]]>
+			<include refid="commonProcessDateColumns"/>
+		FROM T_BATCH_JOB WHERE 1=1
+		<include refid="commonCondition"/>
+		ORDER BY CREATE_DATE, JOB_PRIORITY DESC
+	</select>
+	<select id="listJobByNotFinished" parameterType="map" resultMap="BatchJobResultMapper">
+		<![CDATA[ SELECT ]]>
+			<include refid="commonProcessDateColumns"/>
+		FROM T_BATCH_JOB WHERE 1=1 
+		<foreach collection="jobStatus" index="index" item="id" open=" AND JOB_STATUS NOT IN("
+			separator="," close=") ">
+			'${id}'
+		</foreach>
+		ORDER BY JOB_PRIORITY DESC, JOB_STATUS DESC
+	</select>
+	<select id="listJobByJobPriority" parameterType="map" resultMap="BatchJobResultMapper">
+		<![CDATA[ SELECT ]]>
+			<include refid="commonProcessDateColumns"/>
+		<![CDATA[ FROM T_BATCH_JOB WHERE 1=1 ]]>
+		<foreach collection="jobStatus" index="index" item="id" open=" AND JOB_STATUS IN("
+			separator="," close=") ">
+			'${id}'
+		</foreach>
+		ORDER BY JOB_PRIORITY DESC, JOB_STATUS DESC
+	</select>
+	
+	<select id="listJobByJobPriorityAndJobType" parameterType="java.lang.String" resultMap="BatchJobResultMapper">
+		<![CDATA[ SELECT ]]>
+			<include refid="commonProcessDateColumns"/>
+		<![CDATA[ FROM T_BATCH_JOB WHERE JOB_TYPE = #{jobType} ]]>
+		ORDER BY JOB_PRIORITY DESC, JOB_STATUS DESC
+	</select>
+	
+	<select id="listOnceJobByJobPriority" parameterType="map" resultMap="BatchJobResultMapper">
+		<![CDATA[ SELECT ]]>
+			<include refid="commonProcessDateColumns"/>
+		<![CDATA[ FROM T_BATCH_JOB WHERE JOB_TYPE = #{jobType} ]]>
+		<foreach collection="jobStatus" index="index" item="id" open=" AND JOB_STATUS IN("
+			separator="," close=") ">
+			'${id}'
+		</foreach>
+		ORDER BY JOB_PRIORITY DESC, JOB_STATUS DESC
+	</select>
+	
+	<select id="listPaginationByProperty" parameterType="BatchJob" resultMap="BatchJobResultMapper">
+		SELECT 
+		<include refid="commonProcessDateColumns"/>
+		FROM T_BATCH_JOB WHERE 1=1 
+		<include refid="commonCondition"/>
+	</select>
+	<select id="findByCount" parameterType="BatchJob" resultType="int">
+		SELECT count(1) AS totalcount FROM T_BATCH_JOB WHERE 1=1 
+		<include refid="commonCondition"/>
+	</select>
+</mapper>
