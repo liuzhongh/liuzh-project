@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  - Middle tier application context definition for the image database.
+  -->
+<beans xmlns="http://www.springframework.org/schema/beans"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xmlns:context="http://www.springframework.org/schema/context"
+		xmlns:tx="http://www.springframework.org/schema/tx"
+	    xmlns:aop="http://www.springframework.org/schema/aop"  
+		xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+				http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd
+				http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd
+				http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd">
+
+	<context:component-scan base-package="com.shangkang"></context:component-scan>
+	<context:component-scan base-package="*"></context:component-scan>
+	<aop:aspectj-autoproxy />
+	<!--<aop:config>     
+        <aop:aspect id="beforePointcut" ref="simpleAop">     
+            <aop:before pointcut="execution(* com.shangkang.core.facade.*.*(..))" method="before"/>     
+        </aop:aspect>     
+    </aop:config> 
+
+	--><bean id="springBeanHelper" class="com.shangkang.core.util.SpringBeanHelper"></bean>
+	
+	<bean id="messageSource" class="com.shangkang.core.util.ResourceBundleHelper">
+       <property name="packageNames">
+           <list>
+               <value>com.shangkang.core.resources</value>
+           </list>
+       </property>
+   </bean>
+
+	<bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+      <property name="locations">
+          <list>
+              <value>classpath:jdbc.properties</value>
+          </list>
+      </property>
+  </bean>
+  
+  <!-- data source -->
+	<bean id="dataSource"
+		class="org.apache.commons.dbcp.BasicDataSource"
+		destroy-method="close">
+		<property name="driverClassName">
+			<value>${jdbc.driverClassName}</value>
+		</property>
+		<property name="url">
+			<value>${jdbc.urls}</value>
+		</property>
+		<property name="username">
+			<value>${jdbc.username}</value>
+		</property>
+		<property name="password">
+			<value>${jdbc.password}</value>
+		</property>
+		
+		<property name="maxActive">
+			<value>1</value>
+		</property>
+		
+		<property name="maxWait">
+			<value>5000</value>
+		</property>
+	</bean>
+	
+	 <bean id="paginationPlugin" class="com.shangkang.core.plugin.PaginationPlugin" />
+
+  	<!-- SqlSessionFactoryBean  spring整合ibatis的入口 -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">  
+		<property name="mapperLocations" value="classpath:ibatis/mapper/**/*.xml" />  
+		<property name="dataSource" ref="dataSource" />
+		<property name="typeAliasesPackage" value="com.shangkang.bo" />
+		<property name="plugins">
+			<list>
+				<ref bean="paginationPlugin"/>
+			</list>
+		</property>
+	</bean>
+
+	<!-- ScanMapperFiles -->
+  <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+    <property name="basePackage" value="com.shangkang.mapper" />
+  </bean> 
+  
+	
+	<!-- Transaction manager for a single JDBC DataSource -->
+	<bean id="springJdbcTransactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource"/>
+	</bean>
+	
+	<!-- 定义事务传播属性 -->  
+    <tx:advice id="txAdvice" transaction-manager="springJdbcTransactionManager">  
+       <tx:attributes>  
+          <tx:method name="query*" propagation="REQUIRED" read-only="true"/> 
+          <tx:method name="list*" propagation="REQUIRED" read-only="true"/> 
+          <tx:method name="get*" propagation="REQUIRED" read-only="true"/> 
+          <tx:method name="find*" propagation="REQUIRED" read-only="true"/> 
+          <tx:method name="delete*" propagation="REQUIRED" rollback-for="Exception"/> 
+          <tx:method name="update*" propagation="REQUIRED" rollback-for="Exception"/> 
+          <tx:method name="modify*" propagation="REQUIRED" rollback-for="Exception"/> 
+          <tx:method name="build*" propagation="REQUIRED" rollback-for="Exception"/> 
+          <tx:method name="insert*" propagation="REQUIRED" rollback-for="Exception"/> 
+          <tx:method name="edit*" propagation="REQUIRED" rollback-for="Exception"/> 
+          <tx:method name="save*" propagation="REQUIRED" rollback-for="Exception" /> 
+          <tx:method name="create*" propagation="REQUIRED" rollback-for="Exception"/>
+          <tx:method name="execute" propagation="REQUIRED" rollback-for="Exception"/> 
+          <tx:method name="ext*" propagation="REQUIRES_NEW" rollback-for="Exception"/>
+       </tx:attributes>  
+    </tx:advice>  
+	       
+    <aop:config>  
+       <aop:pointcut id="transactionPointCut" expression="(execution(* com.shangkang.core.facade.*.*(..))) or (execution(* com.shangkang.facade.*.*.*(..)))"/>  
+       <aop:advisor pointcut-ref="transactionPointCut" advice-ref="txAdvice"/>  
+    </aop:config> 
+    
+</beans>
