@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:TitleWindow xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		   xmlns:s="library://ns.adobe.com/flex/spark" 
+		   xmlns:mx="library://ns.adobe.com/flex/mx" 
+		   width="260" creationComplete="init()"
+		   height="75">
+	<fx:Script>
+		<![CDATA[
+			private function init():void
+			{
+				titleDisplay.parent.visible = false;
+			}
+		]]>
+	</fx:Script>
+	<mx:ProgressBar id="pgb" height="30"
+				 	label="数据处理中,请稍候..."
+					focusOut="this.setFocus();"
+					indeterminate="true"
+					width="100%"/>
+</s:TitleWindow>

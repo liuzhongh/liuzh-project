@@ -1,0 +1,3 @@
+<root label="root">
+	<node code="designerExplorer" label="流程管理" uri="org/jbpmside/explorer/modules/DesignerExplorerModule.swf"/>
+</root>

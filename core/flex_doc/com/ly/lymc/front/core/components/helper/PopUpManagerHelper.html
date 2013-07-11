@@ -1,0 +1,71 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd"><!-- saved from url=(0014)about:internet --><html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><link rel="stylesheet" href="../../../../../../../style.css" type="text/css" media="screen"><link rel="stylesheet" href="../../../../../../../print.css" type="text/css" media="print"><link rel="stylesheet" href="../../../../../../../override.css" type="text/css"><meta name="keywords" content="PopUpManagerHelper,com.shangkang.front.core.components.helper.PopUpManagerHelper,addPopUp,bringToFront,centerPopUp,createPopUp,removePopUp"><title>com.shangkang.front.core.components.helper.PopUpManagerHelper</title></head><body><script language="javascript" type="text/javascript" src="../../../../../../../asdoc.js"></script><script language="javascript" type="text/javascript" src="../../../../../../../help.js"></script><script language="javascript" type="text/javascript" src="../../../../../../../cookies.js"></script><script language="javascript" type="text/javascript"><!--
+				asdocTitle = 'PopUpManagerHelper - Flex API Doc By 刘忠华';
+				var baseRef = '../../../../../../../';
+				window.onload = configPage;
+			--></script>
+<script type="text/javascript">
+			scrollToNameAnchor();
+		</script><table class="titleTable" cellpadding="0" cellspacing="0" id="titleTable" style="display:none"><tr><td class="titleTableTitle" align="left">Flex API Doc By 刘忠华</td><td class="titleTableTopNav" align="right"><a href="../../../../../../../package-summary.html" onclick="loadClassListFrame('../../../../../../../all-classes.html')">All Packages</a>&nbsp;|&nbsp;<a href="../../../../../../../class-summary.html" onclick="loadClassListFrame('../../../../../../../all-classes.html')">All Classes</a>&nbsp;|&nbsp;<a href="../../../../../../../all-index-A.html" onclick="loadClassListFrame('../../../../../../../index-list.html')">Index</a>&nbsp;|&nbsp;<a id="framesLink1" href="../../../../../../../index.html?com/ly/lymc/front/core/components/helper/PopUpManagerHelper.html&amp;com/ly/lymc/front/core/components/helper/class-list.html">Frames</a><a id="noFramesLink1" style="display:none" href="" onclick="parent.location=document.location"> No Frames </a></td><td class="titleTableLogo" align="right" rowspan="3"><img src="../../../../../../../images/logo.jpg" class="logoImage" alt=" Adobe Logo " title=" Adobe Logo "></td></tr><tr class="titleTableRow2"><td class="titleTableSubTitle" id="subTitle" align="left">PopUpManagerHelper</td><td class="titleTableSubNav" id="subNav" align="right"><a href="#methodSummary">Methods</a></td></tr><tr class="titleTableRow3"><td colspan="3">&nbsp;</td></tr></table><script language="javascript" type="text/javascript" xml:space="preserve">
+				<!--
+				
+					if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("PopUpManagerHelper"); titleBar_setSubNav(false,false,false,false,false,false,false,false,true,false,false	,false,false,false,false,false);}	
+				-->
+			</script><div xmlns:fn="http://www.w3.org/2005/xpath-functions" class="MainContent"><table class="classHeaderTable" cellpadding="0" cellspacing="0"><tr><td class="classHeaderTableLabel">Package</td><td><a href="package-detail.html" onclick="javascript:loadClassListFrame('class-list.html')">com.shangkang.front.core.components.helper</a></td></tr><tr><td class="classHeaderTableLabel">Class</td><td class="classSignature">public  class  PopUpManagerHelper</td></tr><tr><td class="classHeaderTableLabel">Inheritance</td><td class="inheritanceList">PopUpManagerHelper  <img src="../../../../../../../images/inherit-arrow.gif" title="Inheritance" alt="Inheritance" class="inheritArrow"> Object</td></tr></table><p></p><p></p><p></p><br/><hr></div><a name="methodSummary"></a><div class="summarySection"><div class="summaryTableTitle">Public Methods </div><table cellspacing="0" cellpadding="3" class="summaryTable " id="summaryTableMethod"><tr><th>&nbsp;</th><th colspan="2">Method</th><th class="summaryTableOwnerCol">Defined By</th></tr><tr class=""><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><div class="summarySignature"><a href="#addPopUp()" class="signatureLink">addPopUp</a>(window:IFlexDisplayObject, modal:Boolean = false, childList:String = null, moduleFactory:IFlexModuleFactory = null):void</div><div class="summaryTableDescription">[static] 
+		 弹出顶级窗口。最好调用 removePopUp() 来删除使用 addPopUp() 方法创建的弹出窗口。
+		 如果该类实现了 IFocusManagerContainer，则该窗口将拥有自己的 FocusManager；
+		 因此，当用户使用 Tab 键在各个控件之间导航时，将只能访问此窗口中的控件。 
+		  Example 
+	     
+	      var tw:TitleWindow = new TitleWindow();
+	        tw.title = "My Title";
+	        com.shangkang.front.core.components.helper.PopUpManagerHelper.addPopUp(tw, false);
+		  使用 TitleWindow 类的 tw 实例创建一个弹出窗口，
+		 		并使用 pnl 作为 Sprite 来确定放置此弹出窗口的位置。此窗口将定义为非模态窗口。
+		  
+		 </div></td><td class="summaryTableOwnerCol">PopUpManagerHelper</td></tr><tr class=""><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><div class="summarySignature"><a href="#bringToFront()" class="signatureLink">bringToFront</a>(popUp:IFlexDisplayObject):void</div><div class="summaryTableDescription">[static] 
+		 请确保弹出窗口高于其子项列表中的其它对象。
+		 如果该弹出窗口是顶级窗口并且位于鼠标下，则 SystemManager 会自动将其设置为满足此要求；
+		 否则，您必须自行处理。
+		 </div></td><td class="summaryTableOwnerCol">PopUpManagerHelper</td></tr><tr class=""><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><div class="summarySignature"><a href="#centerPopUp()" class="signatureLink">centerPopUp</a>(popUp:IFlexDisplayObject):void</div><div class="summaryTableDescription">[static] 
+		 使位于调用 createPopUp() 或 addPopUp() 方法期间使用的任何窗口上面的弹出窗口居中显示。 
+		 请注意，由于 Flex 可能会在居中弹出窗口前对其进行测量和布局，因此弹出窗口的位置可能不会在完成此调用后立即更改。
+		 </div></td><td class="summaryTableOwnerCol">PopUpManagerHelper</td></tr><tr class=""><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><div class="summarySignature"><a href="#createPopUp()" class="signatureLink">createPopUp</a>(className:Class, modal:Boolean = false, childList:String = null, moduleFactory:IFlexModuleFactory = null):IFlexDisplayObject</div><div class="summaryTableDescription">[static] 
+		 </div></td><td class="summaryTableOwnerCol">PopUpManagerHelper</td></tr><tr class=""><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><div class="summarySignature"><a href="#removePopUp()" class="signatureLink">removePopUp</a>(popUp:IFlexDisplayObject):void</div><div class="summaryTableDescription">[static] 
+		 删除由 createPopUp() 或 addPopUp() 方法弹出的弹出窗口。
+		 </div></td><td class="summaryTableOwnerCol">PopUpManagerHelper</td></tr></table></div><script language="javascript" type="text/javascript"><!--
+										showHideInherited();
+										--></script><div class="MainContent"><a name="methodDetail"></a><div class="detailSectionHeader">Method Detail</div><a name="addPopUp()"></a><a name="addPopUp(mx.core.IFlexDisplayObject,Boolean,String,mx.core.IFlexModuleFactory)"></a><table class="detailHeader" cellpadding="0" cellspacing="0"><tr><td class="detailHeaderName">addPopUp</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td></tr></table><div class="detailBody"><code> public static function addPopUp(window:IFlexDisplayObject, modal:Boolean = false, childList:String = null, moduleFactory:IFlexModuleFactory = null):void</code><p></p><p></p><p>
+		 弹出顶级窗口。最好调用 removePopUp() 来删除使用 addPopUp() 方法创建的弹出窗口。
+		 如果该类实现了 IFocusManagerContainer，则该窗口将拥有自己的 FocusManager；
+		 因此，当用户使用 Tab 键在各个控件之间导航时，将只能访问此窗口中的控件。 
+		  <p><b>Example</b></p> 
+	     
+	      <pre>var tw:TitleWindow = new TitleWindow();
+	        tw.title = "My Title";
+	        com.shangkang.front.core.components.helper.PopUpManagerHelper.addPopUp(tw, false);</pre>
+		  <p>使用 TitleWindow 类的<code> tw </code>实例创建一个弹出窗口，
+		 		并使用<code> pnl </code>作为 Sprite 来确定放置此弹出窗口的位置。此窗口将定义为非模态窗口。
+		  </p>
+		 </p><p><span class="label"> Parameters </span><table cellpadding="0" cellspacing="0" border="0"><tr><td width="20px"></td><td><code><span class="label">window</span>:IFlexDisplayObject</code> &mdash; 要弹出的 IFlexDisplayObject。
+		 </td></tr><tr><td class="paramSpacer">&nbsp;</td></tr><tr><td width="20px"></td><td><code><span class="label">modal</span>:Boolean</code> (default = <code>false</code>)<code></code> &mdash; 如果为 true，则该窗口为模态窗口，也就是说在删除该窗口之前，用户将无法与其它弹出窗口交互。
+		 </td></tr><tr><td class="paramSpacer">&nbsp;</td></tr><tr><td width="20px"></td><td><code><span class="label">childList</span>:String</code> (default = <code>null</code>)<code></code> &mdash; 要将弹出窗口添加到其中的子项列表。PopUpManagerChildList.APPLICATION、PopUpManagerChildList.POPUP 或 PopUpManagerChildList.PARENT（默认）中的任意一项。
+		 </td></tr><tr><td class="paramSpacer">&nbsp;</td></tr><tr><td width="20px"></td><td><code><span class="label">moduleFactory</span>:IFlexModuleFactory</code> (default = <code>null</code>)<code></code> &mdash; 此弹出窗口应在其中查找其嵌入字体和样式管理器的 moduleFactory。
+		 </td></tr></table></p></div><a name="bringToFront()"></a><a name="bringToFront(mx.core.IFlexDisplayObject)"></a><table class="detailHeader" cellpadding="0" cellspacing="0"><tr><td class="detailHeaderName">bringToFront</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td></tr></table><div class="detailBody"><code> public static function bringToFront(popUp:IFlexDisplayObject):void</code><p></p><p></p><p>
+		 请确保弹出窗口高于其子项列表中的其它对象。
+		 如果该弹出窗口是顶级窗口并且位于鼠标下，则 SystemManager 会自动将其设置为满足此要求；
+		 否则，您必须自行处理。
+		 </p><p><span class="label"> Parameters </span><table cellpadding="0" cellspacing="0" border="0"><tr><td width="20px"></td><td><code><span class="label">popUp</span>:IFlexDisplayObject</code> &mdash; 表示弹出窗口的 IFlexDisplayObject。
+		 </td></tr></table></p></div><a name="centerPopUp()"></a><a name="centerPopUp(mx.core.IFlexDisplayObject)"></a><table class="detailHeader" cellpadding="0" cellspacing="0"><tr><td class="detailHeaderName">centerPopUp</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td></tr></table><div class="detailBody"><code> public static function centerPopUp(popUp:IFlexDisplayObject):void</code><p></p><p></p><p>
+		 使位于调用 createPopUp() 或 addPopUp() 方法期间使用的任何窗口上面的弹出窗口居中显示。 
+		 请注意，由于 Flex 可能会在居中弹出窗口前对其进行测量和布局，因此弹出窗口的位置可能不会在完成此调用后立即更改。
+		 </p><p><span class="label"> Parameters </span><table cellpadding="0" cellspacing="0" border="0"><tr><td width="20px"></td><td><code><span class="label">popUp</span>:IFlexDisplayObject</code> &mdash; 表示弹出窗口的 IFlexDisplayObject。
+		 </td></tr></table></p></div><a name="createPopUp()"></a><a name="createPopUp(Class,Boolean,String,mx.core.IFlexModuleFactory)"></a><table class="detailHeader" cellpadding="0" cellspacing="0"><tr><td class="detailHeaderName">createPopUp</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td></tr></table><div class="detailBody"><code> public static function createPopUp(className:Class, modal:Boolean = false, childList:String = null, moduleFactory:IFlexModuleFactory = null):IFlexDisplayObject</code><p></p><p></p><p>
+		 </p><p><span class="label"> Parameters </span><table cellpadding="0" cellspacing="0" border="0"><tr><td width="20px"></td><td><code><span class="label">className</span>:Class</code> &mdash; 要为弹出窗口创建的对象的类。该类必须实现 IFlexDisplayObject。
+		 </td></tr><tr><td class="paramSpacer">&nbsp;</td></tr><tr><td width="20px"></td><td><code><span class="label">modal</span>:Boolean</code> (default = <code>false</code>)<code></code> &mdash; 如果为 true，则该窗口为模态窗口，也就是说在删除该窗口之前，用户将无法与其它弹出窗口交互。
+		 </td></tr><tr><td class="paramSpacer">&nbsp;</td></tr><tr><td width="20px"></td><td><code><span class="label">childList</span>:String</code> (default = <code>null</code>)<code></code> &mdash; 要将弹出窗口添加到的子项列表。PopUpManagerChildList.APPLICATION、PopUpManagerChildList.POPUP 或 PopUpManagerChildList.PARENT（默认）中的任意一项。
+		 </td></tr><tr><td class="paramSpacer">&nbsp;</td></tr><tr><td width="20px"></td><td><code><span class="label">moduleFactory</span>:IFlexModuleFactory</code> (default = <code>null</code>)<code></code> &mdash; 此弹出窗口应在其中查找其嵌入字体和样式管理器的 moduleFactory。
+		 </td></tr></table></p><p></p><span class="label">Returns</span><table cellpadding="0" cellspacing="0" border="0"><tr><td width="20"></td><td><code>IFlexDisplayObject</code> &mdash; 对新的顶级窗口的引用。
+		 </td></tr></table></div><a name="removePopUp()"></a><a name="removePopUp(mx.core.IFlexDisplayObject)"></a><table class="detailHeader" cellpadding="0" cellspacing="0"><tr><td class="detailHeaderName">removePopUp</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td></tr></table><div class="detailBody"><code> public static function removePopUp(popUp:IFlexDisplayObject):void</code><p></p><p></p><p>
+		 删除由 createPopUp() 或 addPopUp() 方法弹出的弹出窗口。
+		 </p><p><span class="label"> Parameters </span><table cellpadding="0" cellspacing="0" border="0"><tr><td width="20px"></td><td><code><span class="label">popUp</span>:IFlexDisplayObject</code> &mdash; 表示弹出窗口的 IFlexDisplayObject。
+		 </td></tr></table></p></div><br/><br/><hr><br/><p></p><center class="copyright"><footer></footer><br/>Thu May 12 2011, 02:48 PM +08:00  </center></div></body></html><!--<br/>Thu May 12 2011, 02:48 PM +08:00  -->

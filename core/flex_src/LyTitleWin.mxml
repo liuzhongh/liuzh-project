@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:TitleWindow xmlns:fx="http://ns.adobe.com/mxml/2009" 
+			   xmlns:s="library://ns.adobe.com/flex/spark" 
+			   xmlns:mx="library://ns.adobe.com/flex/mx" close="closeWin()" width="805" height="705" creationComplete="init();">
+	<s:layout>
+		<s:BasicLayout/>
+	</s:layout>
+	<fx:Declarations>
+		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
+	</fx:Declarations>
+	<fx:Script>
+		<![CDATA[
+			import mx.managers.PopUpManager;
+			import mx.modules.ModuleLoader;
+			
+			private var _mLoader:ModuleLoader;
+			private function closeWin():void
+			{
+				if (_mLoader != null)
+				{
+					_mLoader.unloadModule();
+				}
+				PopUpManager.removePopUp(this);
+			}
+			private function init():void
+			{
+				_mLoader = new ModuleLoader();
+				_mLoader.url = "TaskPngLook.swf";
+				_mLoader.autoLayout = true;
+				this.addElement(_mLoader);
+				_mLoader.loadModule();
+			}
+			
+			public var selectedItemID:String = "";
+		]]>
+	</fx:Script>
+</s:TitleWindow>

@@ -1,0 +1,11 @@
+﻿{"result":
+    {"id":"1","name":"流程分类","type":"1","children":[
+         {"id":"11","name":"公文管理","type":"1","children":[
+             {"id":"1","name":"发文流程","type":"2"},
+             {"id":"2","name":"收文流程","type":"2"}
+         ]},
+         {"id":"12","name":"安全工单","type":"1"}    
+     ]}
+,
+"stat":"success"
+}
