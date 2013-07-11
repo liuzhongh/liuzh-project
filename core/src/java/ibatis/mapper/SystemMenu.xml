@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<!-- 
+ **
+ * COPYRIGHT (C) 2012 3KW. ALL RIGHTS RESERVED.
+ *
+ * No part of this publication may be reproduced, stored in a retrieval system,
+ * or transmitted, on any form or by any means, electronic, mechanical, photocopying,
+ * recording, or otherwise, without the prior written permission of 3KW.
+ *
+ * Created By: Liuzh
+ * Created On: 2013-2-26 10:33:23
+ *
+ * Amendment History:
+ * 
+ * Amended By       Amended On      Amendment Description
+ * ************     ***********     *********************************************
+ *
+ **
+ -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shangkang.mapper.SystemMenuMapper">
+	<cache type="org.mybatis.caches.memcached.LoggingMemcachedCache" flushInterval="86400000" size="1024000">
+	</cache>
+	<resultMap id="SystemMenuResultMapper" type="SystemMenu">
+		<result column="MENU_ID" property="menuId"/>
+		<result column="MENU_CODE" property="menuCode"/>
+		<result column="MENU_NAME" property="menuName"/>
+		<result column="MENU_ORDER" property="menuOrder"/>
+		<result column="PARENT_MENU_ID" property="parentMenuId"/>
+		<result column="MENU_ICON" property="menuIcon"/>
+		<result column="PAGE_URL" property="pageUrl"/>
+		<result column="REMARKS" property="remarks"/>
+		<result column="CREATOR" property="creator"/>
+		<result column="CREATE_TIME" property="createTime"/>
+		<result column="UPDATE_USER" property="updateUser"/>
+		<result column="UPDATE_TIME" property="updateTime"/>
+	</resultMap>
+	
+	<sql id="commonColumns">
+		 MENU_ID
+		, MENU_CODE
+		, MENU_NAME
+		, MENU_ORDER
+		, PARENT_MENU_ID
+		, MENU_ICON
+		, PAGE_URL
+		, REMARKS
+		, CREATOR
+		, CREATE_TIME
+		, UPDATE_USER
+		, UPDATE_TIME
+	</sql>
+	
+	<sql id="commonProcessDateColumns">
+		 MENU_ID
+		, MENU_CODE
+		, MENU_NAME
+		, MENU_ORDER
+		, PARENT_MENU_ID
+		, MENU_ICON
+		, PAGE_URL
+		, REMARKS
+		, CREATOR
+		, to_char(CREATE_TIME, 'yyyy-mm-dd hh24:mi:ss') CREATE_TIME
+		, UPDATE_USER
+		, to_char(UPDATE_TIME, 'yyyy-mm-dd hh24:mi:ss') UPDATE_TIME
+	</sql>
+	
+	<sql id="commonCondition">
+		<if test="menuId!= null and menuId!= ''"> 
+			AND MENU_ID=#{menuId}
+		</if>
+		<if test="menuCode!= null and menuCode!= ''"> 
+			AND MENU_CODE=#{menuCode}
+		</if>
+		<if test="menuName!= null and menuName!= ''"> 
+			AND MENU_NAME=#{menuName}
+		</if>
+		<if test="menuOrder!= null and menuOrder!= ''"> 
+			AND MENU_ORDER=#{menuOrder}
+		</if>
+		<if test="parentMenuId!= null and parentMenuId!= ''"> 
+			AND PARENT_MENU_ID=#{parentMenuId}
+		</if>
+		<if test="menuIcon!= null and menuIcon!= ''"> 
+			AND MENU_ICON=#{menuIcon}
+		</if>
+		<if test="pageUrl!= null and pageUrl!= ''"> 
+			AND PAGE_URL=#{pageUrl}
+		</if>
+		<if test="remarks!= null and remarks!= ''"> 
+			AND REMARKS=#{remarks}
+		</if>
+		<if test="creator!= null and creator!= ''"> 
+			AND CREATOR=#{creator}
+		</if>
+		<if test="createTime!= null and createTime!= ''"> 
+			AND CREATE_TIME=to_date(#{createTime},'yyyy-mm-dd hh24:mi:ss')
+		</if>
+		<if test="updateUser!= null and updateUser!= ''"> 
+			AND UPDATE_USER=#{updateUser}
+		</if>
+		<if test="updateTime!= null and updateTime!= ''"> 
+			AND UPDATE_TIME=to_date(#{updateTime},'yyyy-mm-dd hh24:mi:ss')
+		</if>
+	</sql>
+	
+	<insert id="save" parameterType="SystemMenu">
+	  <selectKey resultType="java.lang.Long" keyProperty="menuId" order="BEFORE">
+	   select SEQ_T_SYSTEM_MENU.nextVal
+	   from dual
+	  </selectKey>
+		<![CDATA[ INSERT INTO T_SYSTEM_MENU ( ]]>
+		<include refid="commonColumns"/>
+		<![CDATA[
+			) VALUES ( 
+			 #{menuId}
+			, #{menuCode}
+			, #{menuName}
+			, #{menuOrder}
+			, #{parentMenuId}
+			, #{menuIcon}
+			, #{pageUrl}
+			, #{remarks}
+			, #{creator}
+			, to_date(#{createTime},'yyyy-mm-dd hh24:mi:ss')
+			, #{updateUser}
+			, to_date(#{updateTime},'yyyy-mm-dd hh24:mi:ss')
+  ) ]]>
+	</insert>
+	<update id="update" parameterType="SystemMenu">
+		<![CDATA[ UPDATE T_SYSTEM_MENU SET 
+			 MENU_ID=#{menuId} 
+			, MENU_CODE=#{menuCode} 
+			, MENU_NAME=#{menuName} 
+			, MENU_ORDER=#{menuOrder} 
+			, PARENT_MENU_ID=#{parentMenuId} 
+			, MENU_ICON=#{menuIcon} 
+			, PAGE_URL=#{pageUrl} 
+			, REMARKS=#{remarks} 
+			, CREATOR=#{creator} 
+			, CREATE_TIME=to_date(#{createTime},'yyyy-mm-dd hh24:mi:ss')
+			, UPDATE_USER=#{updateUser} 
+			, UPDATE_TIME=to_date(#{updateTime},'yyyy-mm-dd hh24:mi:ss')
+		WHERE MENU_ID = #{menuId}  ]]>
+	</update>
+	<delete id="deleteByPK" parameterType="java.lang.Long">
+		<![CDATA[ DELETE FROM T_SYSTEM_MENU WHERE MENU_ID = #{menuId}  ]]>
+	</delete>
+	<delete id="deleteByPKeys" parameterType="map">
+		DELETE FROM T_SYSTEM_MENU WHERE
+		<foreach collection="primaryKeys" index="index" item="id"
+			open=" MENU_ID IN(" separator="," close=") ">
+			${id}
+		</foreach>
+	</delete>
+	<delete id="deleteByProperty" parameterType="SystemMenu">
+		DELETE FROM T_SYSTEM_MENU WHERE 1 = 1
+		<include refid="commonCondition"/>
+	</delete>
+	<select id="getByPK" parameterType="java.lang.Long" resultMap="SystemMenuResultMapper">
+		<![CDATA[ SELECT ]]>
+			 <include refid="commonProcessDateColumns"/>
+		FROM T_SYSTEM_MENU WHERE MENU_ID = #{menuId}  
+	</select>
+	<select id="list" resultMap="SystemMenuResultMapper">
+		<![CDATA[ SELECT ]]>
+			 <include refid="commonProcessDateColumns"/>
+ 		FROM T_SYSTEM_MENU
+	</select>
+	<select id="listByProperty" parameterType="SystemMenu" resultMap="SystemMenuResultMapper">
+		<![CDATA[ SELECT ]]>
+			<include refid="commonProcessDateColumns"/>
+		FROM T_SYSTEM_MENU WHERE 1=1 
+		<include refid="commonCondition"/>
+	</select>
+	<select id="listPaginationByProperty" parameterType="SystemMenu" resultMap="SystemMenuResultMapper">
+		SELECT 
+		<include refid="commonProcessDateColumns"/>
+		FROM T_SYSTEM_MENU WHERE 1=1 
+		<include refid="commonCondition"/>
+	</select>
+	<select id="findByCount" parameterType="SystemMenu" resultType="int">
+		SELECT count(1) AS totalcount FROM T_SYSTEM_MENU WHERE 1=1 
+		<include refid="commonCondition"/>
+	</select>
+	
+	<select id="findMenu4UserIdAndParentMenuId" parameterType="map" resultMap="SystemMenuResultMapper">
+	    SELECT *
+		FROM
+		  ( SELECT DISTINCT *
+		  FROM T_SYSTEM_MENU M
+		    START WITH M.MENU_ID IN
+		    (SELECT MU.MENU_ID
+		    FROM T_ROLE_MENU MU
+		    WHERE MU.ROLE_ID IN
+		      (SELECT UR.ROLE_ID FROM T_USER_ROLE UR WHERE UR.USER_ID = #{userId})
+		    )
+		    CONNECT BY M.MENU_ID = PRIOR M.PARENT_MENU_ID
+		  ) TMP
+		  START WITH PARENT_MENU_ID = #{parentMenuId}
+		  CONNECT BY PRIOR MENU_ID  = PARENT_MENU_ID
+		ORDER SIBLINGS BY MENU_ORDER
+	</select>
+	
+	<select id="findRootMenu4UserId" parameterType="java.lang.Long" resultMap="SystemMenuResultMapper">
+		SELECT * FROM (SELECT DISTINCT M.*
+		FROM T_SYSTEM_MENU M
+		  START WITH M.MENU_ID IN
+		  (SELECT MU.MENU_ID
+		  FROM T_ROLE_MENU MU
+		  WHERE MU.ROLE_ID IN
+		    (SELECT UR.ROLE_ID FROM T_USER_ROLE UR WHERE UR.USER_ID = #{userId}))
+		    CONNECT BY PRIOR M.PARENT_MENU_ID = M.MENU_ID) P WHERE PARENT_MENU_ID = -1			 
+		 ORDER BY MENU_ORDER
+	</select>
+</mapper>
