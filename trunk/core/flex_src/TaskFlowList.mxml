@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:fx="http://ns.adobe.com/mxml/2009" 
+				xmlns:mx="library://ns.adobe.com/flex/mx" layout="absolute" minWidth="955" minHeight="600"
+				xmlns:command="com.shangkang.front.command.*"
+				xmlns:ly="com.shangkang.front.components.*"
+				xmlns:lymc="com.shangkang.front.components.jbpm.*" creationComplete="doInit()">
+	<fx:Declarations>
+		
+	</fx:Declarations>
+	<fx:Script>
+		<![CDATA[
+			import com.shangkang.front.command.InstanceSimpleCommand;
+			
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			import mx.events.FlexEvent;
+			import mx.managers.PopUpManager;
+			import mx.modules.ModuleLoader;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			
+			import spark.components.TitleWindow;
+			
+			private var Incommand:InstanceSimpleCommand = new InstanceSimpleCommand();
+			
+			private function doInit():void
+			{
+				Incommand.getProcessInstances(dg);
+			}
+			
+			protected function ro_resultHandler(event:ResultEvent):void
+			{
+				var dp:ArrayCollection = dg.dataProvider as ArrayCollection;
+				dp.refresh();
+				dg.dataProvider = dp;
+			}
+			
+			protected function sup_faultHandler(event:FaultEvent):void{
+				Alert.show("流程实例暂停失败，"+event.fault.faultString);
+			}
+			
+			protected function res_faultHandler(event:FaultEvent):void{
+				Alert.show("流程实例恢复失败，"+event.fault.faultString);
+			}
+			
+			protected function del_faultHandler(event:FaultEvent):void{
+				Alert.show("流程实例删除失败，"+event.fault.faultString);
+			}
+			
+			protected function end_faultHandler(event:FaultEvent):void{
+				Alert.show("流程实例终止失败，"+event.fault.faultString);
+			}
+			
+			private function processSuspend(event:MouseEvent):void{
+				var suspId:String = dg.selectedItem.id;
+				Incommand.suspendProcessInstance(suspId,ro_resultHandler,sup_faultHandler);
+			}
+			
+			private function resumeInstance(event:MouseEvent):void{
+				var suspId:String = dg.selectedItem.id;
+				Incommand.resumeProcessInstance(suspId,ro_resultHandler,res_faultHandler);
+			}
+			
+			private function removeInstance(event:MouseEvent):void{
+				var suspId:String = dg.selectedItem.id;
+				Incommand.removeProcessInstance(suspId,ro_resultHandler,del_faultHandler);
+			}
+			
+			private function endInstance(event:MouseEvent):void{
+				var suspId:String = dg.selectedItem.id;
+				Incommand.endProcessInstance(suspId,ro_resultHandler,end_faultHandler);
+			}
+			
+			private function popupWin():void
+			{
+				var tWin:LyTitleWin = new LyTitleWin();
+				tWin.selectedItemID = dg.selectedItem.id;
+				PopUpManager.addPopUp(tWin,this,true);
+				PopUpManager.centerPopUp(tWin);
+			}
+			
+		]]>
+	</fx:Script>
+	<mx:Button x="555" y="10" label="流程图" click="popupWin()"/>
+	<mx:Button x="641" y="10" label="暂停" click="processSuspend(event)"/>
+	<mx:Button x="719" y="10" label="恢复" click="resumeInstance(event)"/>
+	<mx:Button x="797" y="10" label="终止" click="endInstance(event)"/>
+	<mx:Button x="875" y="10" label="删除" click="removeInstance(event)"/>
+	<ly:ExtAdvancedDataGrid id="dg" width="935" verticalAlign="middle" textAlign="center" height="524" x="11" y="35">
+		<ly:columns>
+			<ly:ExtAdvancedDataGridColumn headerText="序号" itemRenderer="com.shangkang.front.components.ExtLabelToRenderer" width="45" draggable="false" editable="false"/>
+			<ly:ExtAdvancedDataGridColumn headerText="流程主题" dataField="name" width="450"/>
+			<ly:ExtAdvancedDataGridColumn headerText="日期时间" dataField="state" width="150"/>
+			<ly:ExtAdvancedDataGridColumn headerText="当前状态" dataField="activityName" width="120"/>
+			<ly:ExtAdvancedDataGridColumn headerText="执行人" dataField="col5" width="120"/>
+			<ly:ExtAdvancedDataGridColumn headerText="流程ID" dataField="id" visible="false"/>
+		</ly:columns>
+	</ly:ExtAdvancedDataGrid>
+</mx:Application>

@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:fx="http://ns.adobe.com/mxml/2009" 
+				xmlns:mx="library://ns.adobe.com/flex/mx" minWidth="900" minHeight="600"
+				xmlns:deploy="com.shangkang.front.components.module.*" xmlns:s="library://ns.adobe.com/flex/spark"
+				xmlns:command="com.shangkang.front.command.*"
+				xmlns:ly="com.shangkang.front.components.*"
+				creationComplete="doInit()">
+	<fx:Declarations>
+		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
+	</fx:Declarations>
+	<fx:Script>
+		<![CDATA[
+			import com.shangkang.front.command.SimpleJbpmCommand;
+			
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			
+			import org.springextensions.actionscript.collections.Map;
+			
+			private var command:SimpleJbpmCommand = new SimpleJbpmCommand();
+			
+			private function doInit():void{
+				command.getLatestProcessDefinitions(dg);
+				
+			}
+			private function objRefresh():void
+			{
+				var dp:ArrayCollection = dg.dataProvider as ArrayCollection;
+				dp.refresh();
+				dg.dataProvider = dp;
+			}
+			
+			private function StartsHandler(event:MouseEvent):void{
+				var proid:String = dg.selectedItem.id;
+				//var variables:Map = new Map;
+				//var cj:String="cj";
+				//variables.put("cj",cj);
+				var variables:Object = {"cj":"cj"};
+				command.processStarts(proid,variables,ro_resultHandler,ro_faultHandler);
+			}
+			
+			protected function ro_faultHandler(event:FaultEvent):void
+			{
+				Alert.show("流程定义启动失败，"+event.fault.faultString);
+			}
+			
+			protected function ro_resultHandler(event:ResultEvent):void
+			{
+				var dp:ArrayCollection = dg.dataProvider as ArrayCollection;
+				dp.refresh();
+				dg.dataProvider = dp;
+			}
+			
+			protected function deleteDeploys(event:MouseEvent):void{
+				var delId:String = dg.selectedItem.id;
+				command.deleteDeployment(delId,ro_resultHandler,del_faultHandler);
+			}
+			
+			protected function del_faultHandler(event:FaultEvent):void{
+				Alert.show("流程定义删除失败，"+event.fault.faultString);
+			}
+			
+			protected function DeploymentSupends(event:MouseEvent):void{
+				var supId:String = dg.selectedItem.id;
+				command.suspendDeployment(supId,ro_resultHandler,sup_faultHandler);
+			}
+			
+			protected function sup_faultHandler(event:FaultEvent):void{
+				Alert.show("流程定义暂停失败，"+event.fault.faultString);
+			}
+			
+			protected function resumesDeployment(event:MouseEvent):void{
+				var resId:String = dg.selectedItem.id;
+				command.resumeProcessDefinitionById(resId,ro_resultHandler,res_faultHandler);
+			}
+			
+			protected function res_faultHandler(event:FaultEvent):void{
+				Alert.show("流程定义恢复失败，"+event.fault.faultString);
+			}
+		]]>
+	</fx:Script>
+	<s:Group width="940" height="50" x="0">
+		<deploy:FileUpload id="deploytask" externalFunc="doInit"/>
+		<s:Button x="634" y="28" label="启 动" click="StartsHandler(event)"/>
+		<s:Button x="712" y="28" label="删 除" click="deleteDeploys(event)"/>
+		<s:Button x="790" y="28" label="暂停" click="DeploymentSupends(event)"/>
+		<s:Button x="868" y="28" label="恢复" click="resumesDeployment(event)"/>
+	</s:Group>
+	<ly:ExtAdvancedDataGrid id="dg" width="940" verticalAlign="middle" textAlign="center" height="524" x="0" y="35">
+		<ly:columns>
+			<ly:ExtAdvancedDataGridColumn headerText="序 号" itemRenderer="com.shangkang.front.components.ExtLabelToRenderer" width="45" draggable="false" editable="false"/>
+			<ly:ExtAdvancedDataGridColumn headerText="流程ID" dataField="id" width="150"/>
+			<ly:ExtAdvancedDataGridColumn headerText="流程名称" dataField="name" width="300"/>
+			<ly:ExtAdvancedDataGridColumn headerText="流程版本" dataField="version" width="150"/>
+			<ly:ExtAdvancedDataGridColumn headerText="状 态" dataField="" width="150"/>
+		</ly:columns>
+	</ly:ExtAdvancedDataGrid>
+</mx:Application>

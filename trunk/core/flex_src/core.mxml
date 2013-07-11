@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute">
+	<mx:Label text="你没有权限访问，请先登录" x="200" y="200"/>
+</mx:Application>

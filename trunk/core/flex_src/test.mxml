@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" xmlns:ly="com.shangkang.front.service.*" 
+	xmlns:exception="com.shangkang.front.core.exception.*">
+<exception:ExceptionHandler id="ex"/>
+<ly:BusinessService id="business"/>
+<mx:Label id="lb" x="10" y="26" width="88"/>
+<mx:RemoteObject id="businessFacade" destination="businessFacade">
+	<mx:method name="getUserById" result="business.getUserById(event, lb)"/>
+	<mx:method name="getInformationById" result="business.getInforById(event, lb)" />
+	<mx:fault>
+		<![CDATA[
+			ex.handleException(event);
+		]]>
+	</mx:fault>
+</mx:RemoteObject>
+<mx:TextInput id="searchStr" x="10" y="71"/>
+<mx:Button label="搜索" click="business.searchById(businessFacade, Number(searchStr.text))" x="187" y="71"/>
+<mx:TextInput id="searchStr2" x="10" y="154"/>
+<mx:Button label="搜索" click="business.searchInfor(businessFacade, Number(searchStr2.text))" x="187" y="154"/>	
+	<mx:Label x="10" y="237" text="姓名：" width="46" height="20"/>
+	<mx:TextInput x="54" y="235" id="user_name"/>
+	<mx:Label x="10" y="284" text="密码："/>
+	<mx:TextInput x="53" y="282" id="user_password"/>
+	<mx:Button x="276" y="284" label="插入" click="business.insertInfor(businessFacade, user_name.text, user_password.text)" />
+</mx:Application>

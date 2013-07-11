@@ -1,0 +1,519 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="core" basedir="." default="help">
+	
+	
+	<!--  =============== 引用properties属性文件 ================== -->
+	<property file="build.properties" />
+	
+	<!-- =================================================================== -->
+	<!-- 变量设置 -->
+	<!-- =================================================================== -->
+
+	<!-- 代码目录 -->	
+	<property name="src.root" value="${project.root}/${project.name}/src" />
+	<property name="java.src" value="${project.root}/${project.name}/src/java" />
+	<property name="java.core" value="${project.root}/${project.name}/src/core" />
+	<property name="java.tools" value="${project.root}/${project.name}/src/tools" />
+	<property name="java.cms" value="${project.root}/${project.name}/src/cms" />
+	<property name="java.bigpipe" value="${project.root}/${project.name}/src/bigpipe" />
+	<property name="java.batch" value="${project.root}/${project.name}/src/batch" />
+	<property name="java.mail" value="${project.root}/${project.name}/src/mail" />
+	<property name="src.web" value="${project.root}/${project.name}/src/web" />
+	<property name="src.conf" value="${project.root}/${project.name}/src/conf" />
+	<property name="tomcat.conf.catalina.localhost" value="${tomcat.home.path}/conf/Catalina/localhost"/>
+	<!--yguard混淆器工作产生的日志文件-->
+  	<property name="obfuscationlog" value="${project.name}_obf_log.xml" />
+	
+	<!-- Java编译CLASSPATH -->
+	<path id="master-classpath">
+		<!-- 加入公用lib包 -->
+		<!--fileset dir="${lib.home}">
+			<include name="**/*.jar" />
+		</fileset-->
+		<fileset dir="${lib.home.local}">
+					<include name="**/*.jar" />
+				</fileset>
+		<!-- 加入应用包,主要是在应用项目中要用 -->
+		<fileset dir="temp">
+			<include name="*.jar"/>
+		</fileset>
+	</path>
+
+	<!-- =================================================================== -->
+	<!-- 帮助信息 -->
+	<!-- =================================================================== -->
+	<target name="help">
+		<echo message=" Application Build File for JDK1.6" />
+		<echo message="用法：ant -[target]" />
+		<echo message="------------------------------------------------------" />
+		<echo message="[target]如下" />
+		<echo message="  clean        清空所有输出文件包括build和部署目录" />
+		<echo message="  exploded-app 创建展开目录形式的应用结构" />
+		<echo message="  war          创建用于发布的WAR包文件（适用于生产打包、远程部署）" />
+		<echo message="  deploy       将扩展目录直接copy到appserver运行环境下(适用于编译环境与运行环境分离)" />
+		<echo message="  i18n         将资源文件转换成UTF-8码,并copy到 classpath下(适用于热部署)" />
+		<echo message="------------------------------------------------------" />
+	</target>
+
+	<!-- clean -->
+	<target name="clean" description="清空所有输出文件包括build和部署目录">
+		<delete dir="temp" />
+		<delete dir="${deploy_dir}/${war.name}" />
+		<delete>
+			<fileset dir="${tomcat.conf.catalina.localhost}" excludes="manager.xml,host-manager.xml" />
+		</delete>
+	</target>
+
+	<target name="create-vm-catalog-file">
+		<echo message="创建tomcat工程虚拟目录"></echo>
+		<delete>
+			<fileset dir="${tomcat.conf.catalina.localhost}" excludes="manager.xml,host-manager.xml" />
+		</delete>
+		<touch file="${tomcat.conf.catalina.localhost}/${project.name}.xml"/>
+		<concat append="true" destfile="${tomcat.conf.catalina.localhost}/${project.name}.xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;&#10;</concat>
+		<concat append="true" destfile="${tomcat.conf.catalina.localhost}/${project.name}.xml">&lt;Context path="/${project.name}" docBase="${web.source.path}"&#10;</concat> 
+		<concat append="true" destfile="${tomcat.conf.catalina.localhost}/${project.name}.xml">&#x20;&#x20;&#x20;&#x20;reloadable="true" &gt;&#10;&lt;/Context&gt;</concat> 		
+	</target>
+
+	<macrodef name="jar-java">
+		<attribute name="jar-java-path"/>
+		<attribute name="jar-java-src"/>
+		<attribute name="jar-java-name"/>
+		<sequential>
+			<mkdir dir="@{jar-java-path}"/>
+			<javac destdir="@{jar-java-path}" debug="true" target="1.6" encoding="UTF-8" deprecation="false" optimize="false" failonerror="true" fork="true" memoryMaximumSize="512m">
+				<src path="@{jar-java-src}" />
+				<classpath refid="master-classpath" />
+				<classpath path="bin"></classpath>
+			</javac>
+			<copy todir="@{jar-java-path}">
+				<fileset dir="@{jar-java-src}">
+					<include name="**/*.properties"/>
+				</fileset>
+			</copy>
+			<copy todir="@{jar-java-path}">
+				<fileset dir="@{jar-java-src}">
+					<include name="**/*.xml"/>
+				</fileset>
+			</copy>
+			<copy todir="@{jar-java-path}">
+				<fileset dir="@{jar-java-src}">
+					<include name="**/*.xsd"/>
+				</fileset>
+			</copy>
+			<copy todir="@{jar-java-path}">
+				<fileset dir="@{jar-java-src}">
+					<include name="**/*.tld"/>
+				</fileset>
+			</copy>
+			<!--jar basedir="@{jar-java-path}" jarfile="F:/work/workspace/3kw/libs/@{jar-java-name}.jar" compress="false" /-->
+			<jar basedir="@{jar-java-path}" jarfile="temp/@{jar-java-name}.jar" compress="false" />
+			<delete dir="@{jar-java-path}"/>
+		</sequential>
+	</macrodef>
+	
+	<target name="jar-javas">
+		<jar-java jar-java-path="temp/building/tools" jar-java-src="${java.tools}" jar-java-name="java-tools"/>
+		<jar-java jar-java-path="temp/building/core" jar-java-src="${java.core}" jar-java-name="java-core"/>
+		<jar-java jar-java-path="temp/building/all" jar-java-src="${java.src}" jar-java-name="java-bin"/>
+		<jar-java jar-java-path="temp/building/pmg" jar-java-src="${src.root}/pmg" jar-java-name="java-pmg"/>
+	</target>
+	
+	<target name="jar-core">
+		<jar-java jar-java-path="temp/building/core" jar-java-src="${java.core}" jar-java-name="java-core"/>
+	</target>
+	
+	<target name="jar-tools">
+		<jar-java jar-java-path="temp/building/tools" jar-java-src="${java.tools}" jar-java-name="java-tools"/>
+	</target>
+	
+	<target name="jar-mail">
+		<jar-java jar-java-path="temp/building/mail" jar-java-src="${java.mail}" jar-java-name="java-mail"/>
+	</target>
+	
+	<target name="jar-cms">
+		<jar-java jar-java-path="temp/building/cms" jar-java-src="${java.cms}" jar-java-name="java-cms"/>
+	</target>
+	
+	<target name="jar-bigpipe">
+		<jar-java jar-java-path="temp/building/pipe" jar-java-src="${java.bigpipe}" jar-java-name="java-bigpipe-temp"/>
+	</target>
+	
+	<target name="jar-batch">
+		<jar-java jar-java-path="temp/building/batch" jar-java-src="${java.batch}" jar-java-name="java-batch"/>
+	</target>
+	
+	<target name="jar-batch-copy" depends="jar-batch">
+		<copy todir="F:/work/workspace/libs">
+			<fileset file="temp/java-batch.jar"></fileset>
+		</copy>
+	</target>
+	
+	<!-- ***********************************混淆任务 **************************-->
+  	<target name="obfuscate">
+      <taskdef name="yguard" classname="com.yworks.yguard.YGuardTask" classpath="E:\tools\struts\yguard-2.4\yguard-2.4\lib/yguard.jar" />
+          <!-- 不同工程需要修改的地方 -->
+      <yguard>
+      	 <rename logfile="${obfuscationlog}">
+         <!--有错误时将中断该target-->
+         <property name="error-checking" value="pedantic" />
+         <property name="language-conformity" value="illegal" />
+         <!--采用混合方式产生名字-->
+         <property name="naming-scheme" value="mix" />
+         <!--设置需要暴露哪些信息，这些信息将不会被混淆-->
+         <expose>
+             <!--仅保持类名不变，完全混淆类的其他信息-->
+             <class classes="private" methods="public" fields="none">
+                 <patternset id="catic">
+                    <include name="**.*" />
+                 </patternset>
+             </class>
+             <!-- 保持所有的属性(过时的方法，文件名，行号、本地变量表)，在系统允许过程中，可能会发生错误信息，
+             如果不保存这些信息，出错时很难跟踪代码，为方便调试保留了这些信息               -->
+             <attribute name="Deprecated, SourceFile, LineNumberTable, LocalVariableTable">
+                 <patternset refid="catic" />
+             </attribute>
+         </expose>
+         <!--设置所有用到得第三方库，不混淆它们-->
+         <externalclasses>
+         	<pathelement location="${lib.home.local}/xwork-core-2.3.1.2.jar" />
+         	<pathelement location="${lib.home.local}/struts2-core-2.3.1.2.jar" />
+         	<pathelement location="${lib.home.local}/servlet-api.jar" />
+         	<pathelement location="${lib.home.local}/el-api.jar" />
+         	<pathelement location="${lib.home.local}/jstl-1.2.jar" />
+         	<pathelement location="${lib.home.local}/jsp-api.jar" />
+         	<pathelement location="${lib.home.local}/freemarker-2.3.18.jar" />
+         	<pathelement location="${lib.home.local}/commons-logging-1.1.1.jar" />
+         	<pathelement location="${lib.home.local}/json-lib-2.1-jdk15.jar" />
+         	<pathelement location="temp/java-tools.jar" />
+         </externalclasses>
+ 
+         <!--调整jar包的资源文件中的引用的类名 -->
+         <adjust replaceContent="true">
+             <include name="**/*.xml" />
+             <include name="./**/*.xml" />
+         </adjust>
+ 		</rename>
+      	 <!--输入和输出jar包，可以有多行-->
+         <!--*********************输入、输出设置开始*************************-->
+         <inoutpair in="temp/java-bigpipe-temp.jar" out="F:/work/workspace/3kw/libs/java-bigpipe.jar" />
+         <!--*********************输入、输出设置结束*************************-->
+      </yguard>
+          <!-- 不同工程需要修改的地方 -->
+  </target>
+  <!-- ***********************************混淆任务结束 ************************-->
+
+	<!-- expload resource -->
+	<target name="exploded-app" description="将指定的java source汇集到一起">		
+		<delete dir="temp/building" />
+		<!-- 发布文件 - 把页面,配置,等拷贝到对就的发布文件夹下 -->
+		<copy todir="${deploy_dir}/${war.name}/">
+			<fileset dir="${src.web}" />
+		</copy>
+		
+		<copy todir="${deploy_dir}/${war.name}/WEB-INF/classes">
+			<fileset dir="${src.conf}" />
+		</copy>
+				
+		<!-- copy libs-->
+		<copy todir="${deploy_dir}/${war.name}/WEB-INF/lib">
+			<fileset dir="temp" >
+				<include name="*.jar"/>
+			</fileset>
+			<fileset dir="${lib.home.local}" />
+		</copy>
+		<delete file="${deploy_dir}/${war.name}/WEB-INF/lib/jsp-api.jar"/>
+		<delete file="${deploy_dir}/${war.name}/WEB-INF/lib/servlet-api.jar"/>
+	</target>
+	<!--Flex ant 依赖包-->
+	<taskdef resource="flexTasks.tasks" classpath="${FLEX_HOME}/ant/lib/flexTasks.jar" /> 
+	<!--taskdef resource="flexUnitTasks.tasks" classpath="${flex.unit.lib.src}/flexUnitTasks-4.1.0-beta1.64.jar" /-->
+		
+	<target name="clean-swf">		
+		<delete>
+			<fileset dir="${flex.output.dir}" includes="**/*.cache" />
+			<fileset dir="${flex.output.dir}" includes="**/*.air" />
+			<fileset dir="${flex.output.dir}" includes="**/*.p12" />
+			<fileset dir="${flex.output.dir}" excludes="**/playerProductInstall.swf" includes="**/*.swf"/>
+		</delete>
+	</target>
+	<!-- 编译Flex工程 -->
+	<macrodef name="compile-swf">
+		<attribute name="flex-source-src" />
+		<attribute name="main-file" />
+		<sequential>
+			<mxmlc file="@{flex-source-src}/@{main-file}.mxml" output="${flex.output.dir}/@{main-file}.swf" fork="true" incremental="true" 
+				services="${web.source.path}/WEB-INF/flex/services-config.xml" context-root="/${project.name}" locale="zh_CN"
+				compiler.show-actionscript-warnings="true"  
+		        compiler.show-binding-warnings="true"  
+		        compiler.show-unused-type-selector-warnings="true"  
+		        compiler.strict="true"
+				keep-generated-actionscript="true">
+				<load-config filename="${FLEX_HOME}/frameworks/flex-config.xml"/>
+				<source-path path-element="@{flex-source-src}"/>
+				<!--library-path dir="${flex.lib.home.local}" append="true">
+					<include name="**/*.swc" />
+				</library-path-->
+				
+				<runtime-shared-library-path path-element="${FLEX_HOME}/frameworks/libs/framework.swc"> 
+					<url rsl-url="http://fpdownload.adobe.com/pub/swz/flex/4.1.0.16076/framework_4.1.0.16076.swz" 
+						policy-file-url="http://fpdownload.adobe.com/pub/swz/crossdomain.xml"/> 
+					<url rsl-url="framework_4.1.0.16076.swz"/> 
+				</runtime-shared-library-path> 
+				<runtime-shared-library-path path-element="${FLEX_HOME}/frameworks/libs/textLayout.swc"> 
+				    <url rsl-url="http://fpdownload.adobe.com/pub/swz/tlf/1.1.0.604/textLayout_1.1.0.604.swz" 
+				    	policy-file-url="http://fpdownload.adobe.com/pub/swz/crossdomain.xml"/> 
+				    <url rsl-url="textLayout_1.1.0.604.swz"/> 
+				</runtime-shared-library-path> 
+				<runtime-shared-library-path path-element="${FLEX_HOME}/frameworks/libs/osmf.swc"> 
+				    <url rsl-url="http://fpdownload.adobe.com/pub/swz/flex/4.1.0.16076/osmf_flex.4.0.0.13495.swz" 
+				    	policy-file-url="http://fpdownload.adobe.com/pub/swz/crossdomain.xml"/> 
+				    <url rsl-url="osmf_flex.4.0.0.13495.swz"/> 
+				</runtime-shared-library-path> 
+				<runtime-shared-library-path path-element="${FLEX_HOME}/frameworks/libs/spark.swc"> 
+				    <url rsl-url="http://fpdownload.adobe.com/pub/swz/flex/4.1.0.16076/spark_4.1.0.16076.swz" 
+				    	policy-file-url="http://fpdownload.adobe.com/pub/swz/crossdomain.xml"/> 
+				    <url rsl-url="spark_4.1.0.16076.swz"/> 
+				</runtime-shared-library-path> 
+				<runtime-shared-library-path path-element="${FLEX_HOME}/frameworks/libs/sparkskins.swc"> 
+				    <url rsl-url="http://fpdownload.adobe.com/pub/swz/flex/4.1.0.16076/sparkskins_4.1.0.16076.swz" 
+				    	policy-file-url="http://fpdownload.adobe.com/pub/swz/crossdomain.xml"/> 
+				    <url rsl-url="sparkskins_4.1.0.16076.swz"/> 
+				</runtime-shared-library-path> 
+				<runtime-shared-library-path path-element="${FLEX_HOME}/frameworks/libs/rpc.swc"> 
+				    <url rsl-url="http://fpdownload.adobe.com/pub/swz/flex/4.1.0.16076/rpc_4.1.0.16076.swz" 
+				    	policy-file-url="http://fpdownload.adobe.com/pub/swz/crossdomain.xml"/> 
+					<url rsl-url="rpc_4.1.0.16076.swz" /> 
+				</runtime-shared-library-path> 
+				
+				<runtime-shared-library-path path-element="${flex.lib.home.local}/as3commons-lang-0.3.swc"> 
+					<url rsl-url="${flex.build.rsls.dir}/as3commons-lang-0.3.swf" policy-file-url=""/> 
+				</runtime-shared-library-path>
+				<runtime-shared-library-path path-element="${flex.lib.home.local}/ly-tools.swc"> 
+					<url rsl-url="${flex.build.rsls.dir}/ly-tools.swf" policy-file-url=""/> 
+				</runtime-shared-library-path>
+				<runtime-shared-library-path path-element="${flex.lib.home.local}/ly-core.swc"> 
+					<url rsl-url="${flex.build.rsls.dir}/ly-core.swf" policy-file-url=""/> 
+				</runtime-shared-library-path>
+				<runtime-shared-library-path path-element="${flex.lib.home.local}/ly-comps.swc"> 
+					<url rsl-url="${flex.build.rsls.dir}/ly-comps.swf" policy-file-url=""/> 
+				</runtime-shared-library-path>
+				<external-library-path dir="${FLEX_HOME}/frameworks" append="true">   
+		            <include name="libs" />   
+		            <include name="locale/{locale}" />   
+		        </external-library-path>  
+				<source-path path-element="${flex.resources.dir}"/>
+				<compiler.debug>true</compiler.debug> 
+			</mxmlc>
+		</sequential>
+	</macrodef>
+	
+	<macrodef name="create-rsl">
+		<attribute name="rsl-dir" />
+		<attribute name="swc-dir" />
+		<attribute name="swc-name" />
+		<sequential>
+			<unzip src="@{swc-dir}/@{swc-name}.swc" dest="@{rsl-dir}" >
+				<patternset>
+					<include name="library.swf" />
+				</patternset>
+			</unzip>
+			<move file="@{rsl-dir}/library.swf" tofile="@{rsl-dir}/@{swc-name}.swf"/>
+		</sequential>
+	</macrodef>
+	
+	<target name="compc-swcs">
+		<compile-swc compc-source-src="./flex_core" main-file="ly-core" />
+	</target>
+	
+	<target name="extract-rsls">
+		<create-rsl rsl-dir="${web.source.path}/${flex.build.rsls.dir}" swc-dir="${flex.lib.home.local}" swc-name="as3commons-lang-0.3" />
+		<create-rsl rsl-dir="${web.source.path}/${flex.build.rsls.dir}" swc-dir="${flex.lib.home.local}" swc-name="ly-tools" />
+		<create-rsl rsl-dir="${web.source.path}/${flex.build.rsls.dir}" swc-dir="${flex.lib.home.local}" swc-name="ly-core" />
+		<create-rsl rsl-dir="${web.source.path}/${flex.build.rsls.dir}" swc-dir="${flex.lib.home.local}" swc-name="ly-comps" />
+	</target>
+	
+	<target name="compile-css">
+		<mxmlc file="${web.source.path}/css/main.css" output="${web.source.path}/${flex.build.rsls.dir}/ly-css.swf" 
+			fork="true" incremental="true" 
+			services="${web.source.path}/WEB-INF/flex/services-config.xml" context-root="/${project.name}" locale="zh_CN"
+			compiler.show-actionscript-warnings="true"  
+	        compiler.show-binding-warnings="true"  
+	        compiler.show-unused-type-selector-warnings="true"  
+	        compiler.strict="true"
+			keep-generated-actionscript="true">
+			<load-config filename="${FLEX_HOME}/frameworks/flex-config.xml"/>
+			<runtime-shared-library-path path-element="${FLEX_HOME}/frameworks/libs/framework.swc"> 
+				<url rsl-url="http://fpdownload.adobe.com/pub/swz/flex/4.1.0.16076/framework_4.1.0.16076.swz" policy-file-url="http://fpdownload.adobe.com/pub/swz/crossdomain.xml"/> 
+				<url rsl-url="framework_4.1.0.16076.swz"/> 
+			</runtime-shared-library-path> 
+			<runtime-shared-library-path path-element="${FLEX_HOME}/frameworks/libs/textLayout.swc"> 
+			    <url rsl-url="http://fpdownload.adobe.com/pub/swz/tlf/1.1.0.604/textLayout_1.1.0.604.swz" policy-file-url="http://fpdownload.adobe.com/pub/swz/crossdomain.xml"/> 
+			    <url rsl-url="textLayout_1.1.0.604.swz"/> 
+			</runtime-shared-library-path> 
+			<runtime-shared-library-path path-element="${FLEX_HOME}/frameworks/libs/osmf.swc"> 
+			    <url rsl-url="http://fpdownload.adobe.com/pub/swz/flex/4.1.0.16076/osmf_flex.4.0.0.13495.swz" policy-file-url="http://fpdownload.adobe.com/pub/swz/crossdomain.xml"/> 
+			    <url rsl-url="osmf_flex.4.0.0.13495.swz"/> 
+			</runtime-shared-library-path> 
+			<runtime-shared-library-path path-element="${FLEX_HOME}/frameworks/libs/spark.swc"> 
+			    <url rsl-url="http://fpdownload.adobe.com/pub/swz/flex/4.1.0.16076/spark_4.1.0.16076.swz" policy-file-url="http://fpdownload.adobe.com/pub/swz/crossdomain.xml"/> 
+			    <url rsl-url="spark_4.1.0.16076.swz"/> 
+			</runtime-shared-library-path> 
+			<runtime-shared-library-path path-element="${FLEX_HOME}/frameworks/libs/sparkskins.swc"> 
+			    <url rsl-url="http://fpdownload.adobe.com/pub/swz/flex/4.1.0.16076/sparkskins_4.1.0.16076.swz" policy-file-url="http://fpdownload.adobe.com/pub/swz/crossdomain.xml"/> 
+			    <url rsl-url="sparkskins_4.1.0.16076.swz"/> 
+			</runtime-shared-library-path> 
+			<runtime-shared-library-path path-element="${FLEX_HOME}/frameworks/libs/rpc.swc"> 
+			    <url rsl-url="http://fpdownload.adobe.com/pub/swz/flex/4.1.0.16076/rpc_4.1.0.16076.swz" policy-file-url="http://fpdownload.adobe.com/pub/swz/crossdomain.xml"/> 
+				<url rsl-url="rpc_4.1.0.16076.swz" /> 
+			</runtime-shared-library-path> 
+		</mxmlc>
+	</target>
+	
+	<target name="compile-swfs" depends="clean-swf, compc-tools, compc-swcs, extract-rsls">
+		<compile-swf flex-source-src="${flex.src}" main-file="AppTest" />
+	</target>
+	
+	<macrodef name="compile-swc">
+		<attribute name="compc-source-src" />
+		<attribute name="main-file" />
+		<sequential>
+		<compc output="${flex.lib.home.local}/@{main-file}.swc">
+			<include-sources dir="@{compc-source-src}">
+			 	<include name="**/*.as" />
+				<include name="**/*.mxml" />
+				<include name="**/*.properties" />
+			</include-sources>
+		</compc>
+		</sequential>
+	</macrodef>
+	
+	<target name="compc-tools">
+		<compc output="${flex.lib.home.local}/ly-tools.swc" debug="false" incremental="true">
+			<include-sources dir="./flex_tools">
+			 	<include name="**/*.as" />
+				<include name="**/*.mxml" />
+				<include name="**/*.properties" />
+			</include-sources>
+			<!-- 将Flex SDK 作为外部库进行引用 -->
+            <compiler.external-library-path dir="${FLEX_HOME}/frameworks">
+                <include name="**/*.swc" />
+            </compiler.external-library-path>
+            <!-- 添加项目中的SWC包,请注意这里是外部 -->
+			<compiler.external-library-path dir="${flex.lib.home.local}">   
+	            <include name="as3commons-lang-0.3.swc" />  
+	        </compiler.external-library-path> 
+		</compc>
+		<!-- 删除缓存文件 -->
+        <delete>
+            <fileset dir="${flex.lib.home.local}" includes="*.cache" />
+        </delete>
+	</target>
+	
+	<target name="compc-core">
+		<compc output="${flex.lib.home.local}/ly-core.swc" debug="false" locale="zh_CN" incremental="true">
+			<!-- Get default flex compiler options. -->
+			<load-config filename="${FLEX_HOME}/frameworks/flex-config.xml" />
+			
+			<!-- 指定编译的源码路径  此标签必须放在include-sources标签之前，否MXML文件编译后会改变路径-->
+			<source-path path-element="./flex_core"/>
+			
+			<!-- 将Flex SDK 作为外部库进行引用 -->
+            <compiler.external-library-path dir="${FLEX_HOME}/frameworks" append="true">
+                <include name="**/*.swc" />
+            </compiler.external-library-path>
+			<!-- 将应用lib 作为外部库进行引用 -->
+            <compiler.external-library-path dir="${flex.lib.home.local}" append="true">
+                <include name="ly-tools.swc" />
+            </compiler.external-library-path>
+			
+			<include-sources dir="./flex_core">
+		 		<include name="**/*.as" />
+				<include name="**/*.mxml" />
+				<include name="**/*.properties" />
+			</include-sources>
+		</compc>
+		<!-- 删除缓存文件 -->
+        <delete>
+            <fileset dir="${flex.lib.home.local}" includes="*.cache" />
+        </delete>
+	</target>
+	
+	<target name="compc-comps">
+		<compc output="${flex.lib.home.local}/ly-comps.swc" debug="false" incremental="true">
+			<include-sources dir="./flex_comps">
+			 	<include name="**/*.as" />
+				<include name="**/*.mxml" />
+				<include name="**/*.properties" />
+			</include-sources>
+			<!-- 将Flex SDK 作为外部库进行引用 -->
+	        <compiler.external-library-path dir="${FLEX_HOME}/frameworks">
+	            <include name="**/*.swc" />
+	        </compiler.external-library-path>
+	        <!-- 添加项目中的SWC包,请注意这里是外部 -->
+			<compiler.external-library-path dir="${flex.lib.home.local}">   
+				<include name="ly-tools.swc" />  
+				<include name="ly-core.swc" />
+			</compiler.external-library-path> 
+		</compc>
+		<!-- 删除缓存文件 -->
+	    <delete>
+	        <fileset dir="${flex.lib.home.local}" includes="*.cache" />
+	    </delete>
+	</target>
+	
+	<target name="test" depends="clean-swf">
+		<!-- Compile TestRunner.mxml as a SWF -->
+		<mxmlc file="${basedir}/flex_src/TestRunner.mxml" output="${web.source.path}/TestRunner.swf">
+			<source-path path-element="${basedir}/flex_src" />
+			<library-path dir="${flex.lib.src}" append="true">
+				<include name="*.swc" />
+			</library-path>
+			<load-config filename="${FLEX_HOME}/frameworks/flex-config.xml"/>
+         	<source-path path-element="${FLEX_HOME}/frameworks"/>
+         	<compiler.debug>true</compiler.debug>
+			<compiler.verbose-stacktraces>true</compiler.verbose-stacktraces>
+			<compiler.headless-server>true</compiler.headless-server>
+		</mxmlc>
+
+		<!-- Execute TestRunner.swf as FlexUnit tests and publish reports -->
+		<flexunit swf="${web.source.path}/TestRunner.swf" 
+			haltonfailure="false" 
+			verbose="true" 
+			localTrusted="true">			
+		</flexunit>
+
+		<!-- Generate readable JUnit-style reports -->
+		<!--junitreport todir="${report.loc}">
+			<fileset dir="${report.loc}">
+				<include name="TEST-*.xml" />
+			</fileset>
+			<report format="frames" todir="${report.loc}/html" />
+		</junitreport-->
+	</target>
+	
+	<!-- 产生flex doc文件-->
+	<target name="clean_flex_doc_dir">
+		<delete dir="${basedir}/flex_doc" failOnError="false" includeEmptyDirs="true"/>
+	</target>
+	
+	<target name="flex_doc_generate" depends="clean_flex_doc_dir">
+		<mkdir dir="${basedir}/flex_doc"/>
+		
+		<asdoc output="${basedir}/flex_doc" debug="true" main-title="Flex API Doc By 刘忠华" window-title="Flex API Doc By 刘忠华" incremental="true">
+			<doc-sources path-element="${basedir}/flex_core"/>
+			<doc-sources path-element="${basedir}/flex_tools"/>
+			<compiler.external-library-path dir="${FLEX_HOME}\frameworks\libs">
+				<include name="**/*.swc" />
+			</compiler.external-library-path>
+			<compiler.external-library-path dir="${basedir}/flex_libs">
+				<include name="**/*.swc" />
+			</compiler.external-library-path>
+		</asdoc>
+	</target>
+		
+	<!-- 系统应用包 -->
+	<target name="war-reportonline"  depends="clean, jar-javas, exploded-app" description="创建用于发布的WAR包文件">
+		<jar basedir="${deploy_dir}/${war.name}" jarfile="${war.name}.war" compress="false" />
+	</target>	
+</project>

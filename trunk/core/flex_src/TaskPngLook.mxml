@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Module xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		   xmlns:s="library://ns.adobe.com/flex/spark" 
+		   xmlns:mx="library://ns.adobe.com/flex/mx"
+		   layout="absolute" minWidth="805" minHeight="905" width="805" height="905" creationComplete="init()">
+	<fx:Declarations>
+		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
+	</fx:Declarations>
+	<fx:Script>
+		<![CDATA[
+			import com.shangkang.front.command.InstanceSimpleCommand;
+			
+			import mx.modules.ModuleLoader;
+			
+			private var Incommand:InstanceSimpleCommand = new InstanceSimpleCommand();
+			
+			private function init():void
+			{
+				var id:String = ((this.parent as ModuleLoader).owner as LyTitleWin).selectedItemID; 
+				Incommand.getInstancePic(id,[img,Incommand.getActivity,id,this]);
+			}
+		]]>
+	</fx:Script>
+	<s:Group>
+		
+		<s:Rect id="rect" width="0" height="0" x="0" y="0">
+			
+		</s:Rect>
+	</s:Group>
+	<mx:Image id="img" height="900" width="800"/>
+</mx:Module>

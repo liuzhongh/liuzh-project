@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ly:SimpleApplication xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" xmlns:ly="com.shangkang.front.components.*">
+<mx:Script>
+	<![CDATA[
+		import com.shangkang.front.bo.Information;
+		import com.shangkang.front.command.SimpleGenericCommand;
+		[Bindable]		
+		private var infor:Information = new Information(); 
+		
+		private var command:SimpleGenericCommand = new SimpleGenericCommand();
+	]]>
+</mx:Script>
+<mx:Canvas id="cv">
+<mx:Label id="lb" x="10" y="26" width="88"/>
+<mx:TextInput id="password" x="10" y="6">
+	
+</mx:TextInput>
+<mx:TextInput id="searchStr" x="10" y="71"/>
+<mx:Button id="btn1" label="搜索" click="command.getUserById(Number(searchStr.text), lb, cv)" x="187" y="71"/>
+<mx:TextInput id="searchStr2" x="10" y="154"/>
+<mx:Button label="搜索" click="command.getInforById(Number(searchStr2.text), lb, cv, btn1)" x="187" y="154"/>	
+	<mx:Label x="10" y="237" text="姓名：" width="46" height="20"/>
+	<mx:TextInput x="54" y="235" id="user_name" text="{infor.name = user_name.text}"/>
+	<mx:Label x="10" y="284" text="密码：" />
+	<mx:TextInput x="53" y="282" id="user_password" text="{infor.password}" displayAsPassword="true"/>
+	<mx:Button x="276" y="284" label="插入" click="command.insertInfo(infor)" />
+</mx:Canvas>	
+<mx:DateField x="10" y="400" formatString="YYYY-MM-DD"/>
+</ly:SimpleApplication>
