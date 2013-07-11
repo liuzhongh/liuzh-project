@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- <configuration -->
+<!-- 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" -->
+<!-- 	xsi:noNamespaceSchemaLocation="file:///F:/work/workspace/core/src/cms/com/core/cms/xml/cms1.0.xsd"> -->
+<configuration
+	xmlns="http://localhost"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:SchemaLocation="http://localhost cms1.0.xsd">
+	
+	<context site="http://localhost" contextPath="3kw" 
+		defaultGeneratedPath="ghtms" defaultRegeneratedInterval="20"/>
+	
+	<parser>
+		<requestUri>^/$</requestUri>
+		<include>
+			<from>indexContent.html</from>
+			<to>IndexContent.htm</to>
+		</include>
+	</parser>
+	<parser>
+		<requestUri>^/flyingbuy.html$</requestUri>
+		<include>
+			<from>b2b/buyContentHead.jsp</from>
+			<to>buyContentHead.htm</to>
+		</include>
+		<include>
+			<from>flyingbuyContent.html</from>
+			<to>flyingbuyContent.htm</to>
+		</include>
+	</parser>
+	
+	<parser>
+		<requestUri>^/pifaIndex.html$</requestUri>
+		<include>
+			<from>b2b/wholeSaleIndexHead.jsp</from>
+			<to>wholeSaleIndexHead.htm</to>
+		</include>
+		<include>
+			<from>wholeSaleIndex.html</from>
+			<to>wholeSaleIndex.htm</to>
+		</include>
+	</parser>
+	
+	<parser>
+		<requestUri dispatcher="forward">^/promo.html$</requestUri>
+		<forward>promo.htm</forward>
+	</parser>
+</configuration>
