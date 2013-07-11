@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<!-- 
+ **
+ * COPYRIGHT (C) 2012 3KW. ALL RIGHTS RESERVED.
+ *
+ * No part of this publication may be reproduced, stored in a retrieval system,
+ * or transmitted, on any form or by any means, electronic, mechanical, photocopying,
+ * recording, or otherwise, without the prior written permission of 3KW.
+ *
+ * Created By: Liuzh
+ * Created On: 2013-2-26 10:33:24
+ *
+ * Amendment History:
+ * 
+ * Amended By       Amended On      Amendment Description
+ * ************     ***********     *********************************************
+ *
+ **
+ -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shangkang.mapper.UserRoleMapper">
+	<cache-ref namespace="com.shangkang.mapper.SystemMenuMapper"/>
+	<resultMap id="UserRoleResultMapper" type="UserRole">
+		<result column="USER_ROLE_ID" property="userRoleId"/>
+		<result column="USER_ID" property="userId"/>
+		<result column="ROLE_ID" property="roleId"/>
+		<result column="REQ_DATE" property="reqDate"/>
+		<result column="CHECK_DATE" property="checkDate"/>
+		<result column="CHECK_STAFF" property="checkStaff"/>
+		<result column="START_DATE" property="startDate"/>
+		<result column="END_DATE" property="endDate"/>
+		<result column="REMARK" property="remark"/>
+	</resultMap>
+	
+	<sql id="commonColumns">
+		 USER_ROLE_ID
+		, USER_ID
+		, ROLE_ID
+		, REQ_DATE
+		, CHECK_DATE
+		, CHECK_STAFF
+		, START_DATE
+		, END_DATE
+		, REMARK
+	</sql>
+	
+	<sql id="commonProcessDateColumns">
+		 USER_ROLE_ID
+		, USER_ID
+		, ROLE_ID
+		, to_char(REQ_DATE, 'yyyy-mm-dd hh24:mi:ss') REQ_DATE
+		, to_char(CHECK_DATE, 'yyyy-mm-dd hh24:mi:ss') CHECK_DATE
+		, CHECK_STAFF
+		, to_char(START_DATE, 'yyyy-mm-dd hh24:mi:ss') START_DATE
+		, to_char(END_DATE, 'yyyy-mm-dd hh24:mi:ss') END_DATE
+		, REMARK
+	</sql>
+	
+	<sql id="commonCondition">
+		<if test="userRoleId!= null and userRoleId!= ''"> 
+			AND USER_ROLE_ID=#{userRoleId}
+		</if>
+		<if test="userId!= null and userId!= ''"> 
+			AND USER_ID=#{userId}
+		</if>
+		<if test="roleId!= null and roleId!= ''"> 
+			AND ROLE_ID=#{roleId}
+		</if>
+		<if test="reqDate!= null and reqDate!= ''"> 
+			AND REQ_DATE=to_date(#{reqDate},'yyyy-mm-dd hh24:mi:ss')
+		</if>
+		<if test="checkDate!= null and checkDate!= ''"> 
+			AND CHECK_DATE=to_date(#{checkDate},'yyyy-mm-dd hh24:mi:ss')
+		</if>
+		<if test="checkStaff!= null and checkStaff!= ''"> 
+			AND CHECK_STAFF=#{checkStaff}
+		</if>
+		<if test="startDate!= null and startDate!= ''"> 
+			AND START_DATE=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+		</if>
+		<if test="endDate!= null and endDate!= ''"> 
+			AND END_DATE=to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')
+		</if>
+		<if test="remark!= null and remark!= ''"> 
+			AND REMARK=#{remark}
+		</if>
+	</sql>
+	
+	<insert id="save" parameterType="UserRole">
+	  <selectKey resultType="java.lang.Long" keyProperty="userRoleId" order="BEFORE">
+	   select SEQ_T_USER_ROLE.nextVal
+	   from dual
+	  </selectKey>
+		<![CDATA[ INSERT INTO T_USER_ROLE ( ]]>
+		<include refid="commonColumns"/>
+		<![CDATA[
+			) VALUES ( 
+			 #{userRoleId}
+			, #{userId}
+			, #{roleId}
+			, to_date(#{reqDate},'yyyy-mm-dd hh24:mi:ss')
+			, to_date(#{checkDate},'yyyy-mm-dd hh24:mi:ss')
+			, #{checkStaff}
+			, to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+			, to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')
+			, #{remark}
+  ) ]]>
+	</insert>
+	<update id="update" parameterType="UserRole">
+		<![CDATA[ UPDATE T_USER_ROLE SET 
+			 USER_ROLE_ID=#{userRoleId} 
+			, USER_ID=#{userId} 
+			, ROLE_ID=#{roleId} 
+			, REQ_DATE=to_date(#{reqDate},'yyyy-mm-dd hh24:mi:ss')
+			, CHECK_DATE=to_date(#{checkDate},'yyyy-mm-dd hh24:mi:ss')
+			, CHECK_STAFF=#{checkStaff} 
+			, START_DATE=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+			, END_DATE=to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')
+			, REMARK=#{remark} 
+		WHERE USER_ROLE_ID = #{userRoleId}  ]]>
+	</update>
+	<delete id="deleteByPK" parameterType="java.lang.Long">
+		<![CDATA[ DELETE FROM T_USER_ROLE WHERE USER_ROLE_ID = #{userRoleId}  ]]>
+	</delete>
+	<delete id="deleteByPKeys" parameterType="map">
+		DELETE FROM T_USER_ROLE WHERE
+		<foreach collection="primaryKeys" index="index" item="id"
+			open=" USER_ROLE_ID IN(" separator="," close=") ">
+			${id}
+		</foreach>
+	</delete>
+	<delete id="deleteByProperty" parameterType="UserRole">
+		DELETE FROM T_USER_ROLE WHERE 1 = 1
+		<include refid="commonCondition"/>
+	</delete>
+	<select id="getByPK" parameterType="java.lang.Long" resultMap="UserRoleResultMapper">
+		<![CDATA[ SELECT ]]>
+			 <include refid="commonProcessDateColumns"/>
+		FROM T_USER_ROLE WHERE USER_ROLE_ID = #{userRoleId}  
+	</select>
+	<select id="list" resultMap="UserRoleResultMapper">
+		<![CDATA[ SELECT ]]>
+			 <include refid="commonProcessDateColumns"/>
+ 		FROM T_USER_ROLE
+	</select>
+	<select id="listByProperty" parameterType="UserRole" resultMap="UserRoleResultMapper">
+		<![CDATA[ SELECT ]]>
+			<include refid="commonProcessDateColumns"/>
+		FROM T_USER_ROLE WHERE 1=1 
+		<include refid="commonCondition"/>
+	</select>
+	<select id="listPaginationByProperty" parameterType="UserRole" resultMap="UserRoleResultMapper">
+		SELECT 
+		<include refid="commonProcessDateColumns"/>
+		FROM T_USER_ROLE WHERE 1=1 
+		<include refid="commonCondition"/>
+	</select>
+	<select id="findByCount" parameterType="UserRole" resultType="int">
+		SELECT count(1) AS totalcount FROM T_USER_ROLE WHERE 1=1 
+		<include refid="commonCondition"/>
+	</select>
+</mapper>
