@@ -29,7 +29,6 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import com.core.cms.BaseRuleValidated;
 import com.core.cms.CmsHandler;
@@ -86,7 +85,8 @@ public class ConfigLoad {
 			CmsHandler handler = new CmsHandler();
 
 			HttpServletRequest hsRequest = (HttpServletRequest) request;
-			String baseUrl = hsRequest.getRequestURL().toString();
+			String baseUrl = new StringBuffer(hsRequest.getScheme()).append("://")
+					.append(hsRequest.getLocalAddr()).append(":").append(hsRequest.getLocalPort()).append(hsRequest.getRequestURI()).toString();
 			String matcherUrl = hsRequest.getRequestURI().replace(hsRequest.getContextPath(), "");
 			
 			for(Rule rule :rules)

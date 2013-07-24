@@ -24,6 +24,8 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
@@ -34,12 +36,11 @@ import org.xml.sax.SAXParseException;
 
 import com.core.cms.IncludeRule;
 import com.core.cms.Rule;
-import com.core.cms.utils.Log;
 import com.shangkang.tools.UtilHelper;
 
 public class Configuration {
 
-	private static Log			log		= Log.getLog(Configuration.class);
+	private static Log			log		= LogFactory.getLog(Configuration.class);
 
 	private final List<String>	errors	= new ArrayList<String>();
 	
