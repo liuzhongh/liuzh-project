@@ -26,13 +26,14 @@ import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.methods.PostMethod;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
-import com.core.cms.utils.Log;
 import com.shangkang.tools.DateHelper;
 
 public class CmsHandler {
 
-	private static Log	log	= Log.getLog(CmsHandler.class);
+	private static Log	log	= LogFactory.getLog(CmsHandler.class);
 	
 	private HttpClient httpClient;
 	

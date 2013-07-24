@@ -28,13 +28,15 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import com.core.cms.config.ConfigLoad;
-import com.core.cms.utils.Log;
 import com.shangkang.tools.UtilHelper;
 
 public class ContentGenerateFilter implements Filter {
 
-	private static Log			log							= Log.getLog(ContentGenerateFilter.class);
+	private static Log			log							= LogFactory.getLog(ContentGenerateFilter.class);
 
 	public static final String	DEFAULT_CONFIG_FILE_PATH	= "/WEB-INF/cms.xml";
 
@@ -52,7 +54,6 @@ public class ContentGenerateFilter implements Filter {
 		configFilePath = null;
 		context = null;
 		
-		Log.resetAll();
 	}
 
 	@Override
@@ -95,8 +96,6 @@ public class ContentGenerateFilter implements Filter {
 		}
 		String basePath = context.getRealPath("");
 
-		Log.setConfiguration(filterConfig);
-		
 		configFilePath = filterConfig.getInitParameter("config");
 		
 		if(UtilHelper.isEmpty(configFilePath))

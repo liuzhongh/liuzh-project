@@ -19,16 +19,16 @@ package com.core.cms.config;
 import java.util.Hashtable;
 import java.util.regex.Pattern;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.DefaultHandler;
 
-import com.core.cms.utils.Log;
-
 public class ConfigHandler extends DefaultHandler {
 
-	private static Log log = Log.getLog(ConfigHandler.class);
+	private static Log log = LogFactory.getLog(ConfigHandler.class);
 
     // pattern to match file://, http://, jndi://
     private static final Pattern HAS_PROTOCOL = Pattern.compile("^\\w+:");
