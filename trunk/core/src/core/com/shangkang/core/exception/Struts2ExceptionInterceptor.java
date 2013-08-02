@@ -62,11 +62,13 @@ public class Struts2ExceptionInterceptor extends StaticParametersInterceptor {
 						obj.element("errorMsg", e.getMessage());
 						String msg = obj.toString();
 						
-						response.setContentType("text/xml; charset=UTF-8");
+						response.setContentType("text/html; charset=UTF-8");
 						response.setCharacterEncoding("UTF-8");
 						response.setContentLength(msg.getBytes("UTF-8").length);
 				        PrintWriter out = response.getWriter();
 				        out.print(msg);
+				        out.flush();
+				        out.close();
 				        logger.error("", e);
 			        
 				        return code;
@@ -86,7 +88,7 @@ public class Struts2ExceptionInterceptor extends StaticParametersInterceptor {
 	private void processAjax(HttpServletResponse response, Exception e) throws Exception
 	{
 		response.setStatus(6000);
-		response.setContentType("text/xml; charset=UTF-8");
+		response.setContentType("text/html; charset=UTF-8");
 		response.setCharacterEncoding("UTF-8");
 		
 		if(null != e.getMessage())
@@ -94,6 +96,8 @@ public class Struts2ExceptionInterceptor extends StaticParametersInterceptor {
 		
         PrintWriter out = response.getWriter();
         out.print(e.getMessage());
+        out.flush();
+        out.close();
         logger.error("", e);
 	}
 
