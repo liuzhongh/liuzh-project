@@ -82,11 +82,11 @@ public class TaskThreadAdapter {
 		
 		long cycleTime = Long.valueOf(cycle);
 		
+		this.servletContext = servletContext;
+		
 		this.startThreadPool();//启动线程池
 		
 		int counter = 0;
-		
-		this.servletContext = servletContext;
 		
 		for(;;)
 		{			
