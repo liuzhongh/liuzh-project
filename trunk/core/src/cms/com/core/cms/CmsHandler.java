@@ -34,10 +34,10 @@ import com.shangkang.tools.DateHelper;
 public class CmsHandler {
 
 	private static Log	log	= LogFactory.getLog(CmsHandler.class);
-	
-	private HttpClient httpClient;
-	
-	private PostMethod postMethod;
+
+	private HttpClient	httpClient;
+
+	private PostMethod	postMethod;
 
 	public CmsHandler()
 	{
@@ -45,41 +45,76 @@ public class CmsHandler {
 		this.httpClient = new HttpClient();
 	}
 
+	public boolean needGeneratedFile(String htmlPath, int regeneratedInterval)
+	{
+		File file = null;
+
+		try
+		{
+			file = new File(htmlPath);
+
+			if (file.exists())
+			{
+				long now = DateHelper.getMillis(DateHelper.now());
+				long last = file.lastModified();
+				long differ = now - last;
+
+				log.debug("Time now: " + now + " lastModified: " + last
+						+ " regeneratedInterval: " + regeneratedInterval
+						* 60000 + " differ times: " + differ);
+
+				if (regeneratedInterval <= 0
+						|| differ < regeneratedInterval * 60000)
+					return false;
+			}
+
+			return true;
+
+		} finally
+		{
+			file = null;
+		}
+	}
+
 	public void parse2Html(String url, String htmlPath, int regeneratedInterval)
 	{
-		
+
 		BufferedWriter writer = null;
 		File file = null;
 		try
 		{
 			// postMethod.addRequestHeader("accept-encoding", "gzip,deflate");
 			// GetMethod doget =new GetMethod(url);
-//			if(true) return;
-			
+			// if(true) return;
+
 			log.debug("parseUrl = " + url + " htmlPath = " + htmlPath);
-			
-			file = new File(htmlPath);
-			
-			if(file.exists())
+
+			/*file = new File(htmlPath);
+
+			if (file.exists())
 			{
 				long now = DateHelper.getMillis(DateHelper.now());
 				long last = file.lastModified();
 				long differ = now - last;
-				
-				log.debug("Time now: " + now + " lastModified: " + last + " regeneratedInterval: "  + regeneratedInterval * 60000 + " differ times: " + differ);
-				
-				if(regeneratedInterval <= 0 || differ < regeneratedInterval * 60000)
+
+				log.debug("Time now: " + now + " lastModified: " + last
+						+ " regeneratedInterval: " + regeneratedInterval
+						* 60000 + " differ times: " + differ);
+
+				if (regeneratedInterval <= 0
+						|| differ < regeneratedInterval * 60000)
 					return;
-			}
-			
+			}*/
+
 			postMethod = new PostMethod(url);
 			postMethod.setParameter("isHttpClientRequest", "Y");
-			
+
 			int statusCode = httpClient.executeMethod(postMethod);
-			
+
 			if (statusCode != HttpStatus.SC_OK)
 			{
-				log.error("Http connect error code:" + statusCode + " url:" + url);
+				log.error("Http connect error code:" + statusCode + " url:"
+						+ url);
 				return;
 			}
 			// byte[] body = doget.getResponseBody();
@@ -115,7 +150,7 @@ public class CmsHandler {
 					writer.close();
 				if (postMethod != null)
 					postMethod.releaseConnection();
-				
+
 				file = null;
 			} catch (IOException e)
 			{
@@ -125,7 +160,7 @@ public class CmsHandler {
 		}
 
 	}
-	
+
 	public void releaseConnection()
 	{
 		if (postMethod != null)

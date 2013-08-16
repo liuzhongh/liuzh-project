@@ -20,6 +20,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -30,6 +31,9 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import com.core.cms.BaseRuleValidated;
 import com.core.cms.CmsHandler;
 import com.core.cms.IncludeRule;
@@ -39,6 +43,8 @@ import com.shangkang.tools.UtilHelper;
 
 public class ConfigLoad {
 
+	private static Log	log	= LogFactory.getLog(ConfigLoad.class);
+	
 	public final String CONFIG_FILE = "cms.xml";
 	
 	private Configuration configuration;
@@ -73,14 +79,17 @@ public class ConfigLoad {
 	public void resolveRule2Html(ServletRequest request, ServletResponse response,
 			FilterChain chain) throws IOException, ServletException
 	{
+		log.debug("---------------------开始验证产生静态文件----------------------------");
+		
 //		String site = configuration.getSite();
 //		String contextPath = configuration.getContextPath();
 		String defaultGeneratedPath = configuration.getDefaultGeneratedPath();
-		List<Rule> rules = configuration.getRules();
+//		List<Rule> rules = configuration.getRules();
+		Map<String, Rule> ruleMap = configuration.getRuleMap();
 		String baseGeneratedPath = configuration.getBaseGeneratedPath();
 		String defaultRegeneratedInterval = configuration.getDefaultRegeneratedInterval();
 		
-		if(!UtilHelper.isEmpty(rules))
+		if(!UtilHelper.isEmpty(ruleMap))
 		{
 			CmsHandler handler = new CmsHandler();
 
@@ -88,16 +97,13 @@ public class ConfigLoad {
 			String baseUrl = new StringBuffer(hsRequest.getScheme()).append("://")
 					.append(hsRequest.getLocalAddr()).append(":").append(hsRequest.getLocalPort()).append(hsRequest.getRequestURI()).toString();
 			String matcherUrl = hsRequest.getRequestURI().replace(hsRequest.getContextPath(), "");
+
+			Rule rule = ruleMap.get("^" + matcherUrl + "$");
 			
-			for(Rule rule :rules)
+			String requestUri = rule.getRequestUri();
+			
+			if(null != rule && !UtilHelper.isEmpty(requestUri))
 			{
-//				doParse(handler, request, response, configuration.getBaseGeneratedPath(), configuration.getDefaultRegeneratedInterval(), defaultGeneratedPath, rule);
-				
-				String requestUri = rule.getRequestUri();
-				
-				if(UtilHelper.isEmpty(requestUri) || !validated.validateRequestUri(matcherUrl, requestUri))
-					continue;
-				
 				String dispatcher = rule.getDispatcher();
 				String generatedPath = rule.getGeneratedPath();
 				StringBuilder fileSavePath = new StringBuilder(baseGeneratedPath);
@@ -119,37 +125,53 @@ public class ConfigLoad {
 				
 				if(Rule.DISPATCHER_INCLUDE.equalsIgnoreCase(dispatcher))
 				{
-					List<IncludeRule> iRules = rule.getIncludeRules();
+					String includeUri = (String)hsRequest.getAttribute("javax.servlet.include.servlet_path");
 					
-					if(!UtilHelper.isEmpty(iRules))
+					if(!UtilHelper.isEmpty(includeUri))
 					{
-						for(IncludeRule includeRule : iRules)
+						includeUri = includeUri.substring(includeUri.lastIndexOf("/"));
+						
+						StringBuilder filePath = new StringBuilder(fileSavePath);
+						
+						filePath.append(File.separator).append(includeUri.replace("/", ""));
+						
+						if(handler.needGeneratedFile(filePath.toString(), regeneratedInterval))
 						{
-							String from = includeRule.getFrom();
-							String to = includeRule.getTo();
-							StringBuffer filePath = new StringBuffer(fileSavePath);
+							List<IncludeRule> iRules = rule.getIncludeRules();
 							
-							String tmpUrl = baseUrl.substring(0, baseUrl.lastIndexOf(matcherUrl));
-							
-							StringBuilder url = new StringBuilder(tmpUrl);
-							
-							if(!UtilHelper.isEmpty(from))
-								url.append("/").append(from);
-							
-							if(!UtilHelper.isEmpty(to))
-								filePath.append(File.separator).append(to);
-							else
+							if(!UtilHelper.isEmpty(iRules))
 							{
-								filePath.append(File.separator);
-								if(from.contains("."))
+								for(IncludeRule includeRule : iRules)
 								{
-									from = from.substring(0, from.lastIndexOf("."));
+									String from = includeRule.getFrom();
+									String to = includeRule.getTo();
+									
+									if(!validated.validateIncludeUri(includeUri, to))
+										continue;
+									
+									String tmpUrl = baseUrl.substring(0, baseUrl.lastIndexOf(matcherUrl));
+									
+									StringBuilder url = new StringBuilder(tmpUrl);
+									
+									if(!UtilHelper.isEmpty(from))
+										url.append("/").append(validated.replacementUri(null, includeUri, from, to));
+									
+	//								if(!UtilHelper.isEmpty(to))
+	//									filePath.append(File.separator).append(includeUri.replace("/", ""));
+									/*else
+									{
+										filePath.append(File.separator);
+										if(from.contains("."))
+										{
+											from = from.substring(0, from.lastIndexOf("."));
+										}
+										
+										filePath.append(from.replace("/", "\\")).append(".htm");
+									}*/
+									
+									handler.parse2Html(url.toString(), filePath.toString(), regeneratedInterval);
 								}
-								
-								filePath.append(from.replace("/", "\\")).append(".htm");
 							}
-							
-							handler.parse2Html(url.toString(), filePath.toString(), regeneratedInterval);
 						}
 					}
 				}else
@@ -172,6 +194,8 @@ public class ConfigLoad {
 			}
 			
 			handler.releaseConnection();
+			
+			log.debug("---------------------结束验证产生静态文件----------------------------");
 			
 			chain.doFilter(request, response);
 		}

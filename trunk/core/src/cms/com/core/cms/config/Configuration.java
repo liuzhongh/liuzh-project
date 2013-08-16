@@ -18,7 +18,9 @@ package com.core.cms.config;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -44,9 +46,9 @@ public class Configuration {
 
 	private final List<String>	errors	= new ArrayList<String>();
 	
-	private final List<Rule> rules = new ArrayList<Rule>(50);
-	
 	private List<String> requestUris = new ArrayList<String>();
+	
+	private Map<String, Rule> ruleMap = new HashMap<String, Rule>(50);
 	
 	private String site;
 	
@@ -140,12 +142,9 @@ public class Configuration {
 		this.defaultRegeneratedInterval = defaultRegeneratedInterval;
 	}
 
-	/**
-	 * @return the rules
-	 */
-	public List<Rule> getRules()
+	public Map<String, Rule> getRuleMap()
 	{
-		return rules;
+		return ruleMap;
 	}
 
 	/**
@@ -238,7 +237,7 @@ public class Configuration {
 				processRule(ruleElement, rule);
 				processIncludeNodes(ruleElement, rule);
 
-				addRule(rule);
+				ruleMap.put(rule.getRequestUri(), rule);
 			}
 
 		}
@@ -316,10 +315,6 @@ public class Configuration {
 		setDefaultRegeneratedInterval(getAttrValue(contextElement, "defaultRegeneratedInterval"));
 	}
 	
-	private void addRule(final Rule rule) {
-        rules.add(rule);
-    }
-
 	private static String getNodeValue(Node node)
 	{
 		if (node == null)
