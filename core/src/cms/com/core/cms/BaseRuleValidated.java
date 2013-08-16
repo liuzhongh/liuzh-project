@@ -20,10 +20,15 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import com.shangkang.tools.UtilHelper;
 
 public class BaseRuleValidated {
 
+	private static Log			log							= LogFactory.getLog(BaseRuleValidated.class);
+	
 	public boolean validateRequestUri(String url, List<String> regexList)
 	{
 		if(UtilHelper.isEmpty(regexList))
@@ -61,4 +66,57 @@ public class BaseRuleValidated {
 	{
 		
 	}
+	
+	public boolean validateIncludeUri(String includeUri, String to)
+	{
+		Pattern pattern = Pattern.compile(to);
+        Matcher matcher = pattern.matcher(includeUri);
+        
+        return matcher.find(0);
+	}
+	
+	public String replacementUri(String queryString, String includeUri, String from, String to)
+	{
+		Pattern pattern = Pattern.compile(to);
+        Matcher matcher = pattern.matcher(includeUri);
+        if (!matcher.find(0))
+        {
+            return from;
+        }
+        String replacement = replace(matcher, from);
+        if (queryString != null) {
+            if (replacement.indexOf('?') > 0)
+                replacement = replacement + '&' + queryString;
+            else
+                replacement = replacement + '?' + queryString;
+        }
+        
+        log.debug("replacement :" + replacement);
+        
+        return replacement;
+	}
+	
+	private String replace(Matcher matcher, String target) {
+        StringBuilder cb = new StringBuilder(512);
+        for (int i = 0; i < target.length(); i++) {
+            char ch = target.charAt(i);
+            if (ch != '$' || i == target.length() - 1)
+                cb.append(ch);
+            else {
+                ch = target.charAt(i + 1);
+                if (ch >= '0' && ch <= '9') {
+                    int group = ch - '0';
+                    cb.append(matcher.group(group));
+                    i++;
+                }
+                else if (ch == '$') {
+                    cb.append('$');
+                    i++;
+                }
+                else
+                    cb.append('$');
+            }
+        }
+        return cb.toString();
+    }
 }

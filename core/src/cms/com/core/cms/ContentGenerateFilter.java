@@ -62,7 +62,8 @@ public class ContentGenerateFilter implements Filter {
 	{
 		final HttpServletRequest hsRequest = (HttpServletRequest) request;
         
-        log.debug(hsRequest.getRequestURI() + " url = " + hsRequest.getRequestURL());
+        log.debug(hsRequest.getRequestURI() + " url = " + hsRequest.getRequestURL() + " servlet : " + hsRequest.getServletPath());
+        log.debug("Include uri :" + hsRequest.getAttribute("javax.servlet.include.servlet_path"));
         
         if(!load.validateRequestUri(hsRequest.getRequestURI().replace(hsRequest.getContextPath(), "")) 
         		|| "Y".equalsIgnoreCase(request.getParameter("isHttpClientRequest")))
