@@ -87,7 +87,7 @@ public class Struts2ExceptionInterceptor extends StaticParametersInterceptor {
 	
 	private void processAjax(HttpServletResponse response, Exception e) throws Exception
 	{
-		response.setStatus(6000);
+		response.setStatus(401);
 		response.setContentType("text/html; charset=UTF-8");
 		response.setCharacterEncoding("UTF-8");
 		
