@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+  SYSTEM
+  "/media/liuzh/A870ECF470ECCA60/work/workspace/code-generator/src/code/org/code/generator/dom/code-generator-config_1_0.dtd">
+
+<configuration>
+  <classPathEntry location="/media/liuzh/A870ECF470ECCA60/work/workspace/libs/ojdbc6.jar" />
+
+  <context id="Oracle2Tables" targetRuntime="MyBatis3">
+    
+    <jdbcConnection driverClass="oracle.jdbc.OracleDriver"
+        connectionURL="jdbc:oracle:thin:@192.168.11.27:1521:DEVDB"
+        userId="usr_mn"
+        password="usr_mn321"
+        remarksReporting="true">
+    </jdbcConnection>
+
+    <javaTypeResolver >
+      <property name="forceBigDecimals" value="false" />
+    </javaTypeResolver>
+
+    <table schema="usr_mn" allTable="flase" tablesName="T_PROCESS_NODE,T_PROCESS_DESC,T_PROCESS_RECORD,T_NODE_CONDITION,T_PROCESS_EXECUTION" tablePrefix="T_">
+    </table>
+    
+    <commonPlugin templatePath="/media/liuzh/A870ECF470ECCA60/work/workspace/code-generator/src/conf/action" override="false" templateName="struts.ftl" fileSuffix="" fileExtension="xml" fileTargetProject="/media/liuzh/A870ECF470ECCA60/work/workspace/trans/src/web" targetPackage="base">
+    	<property name="jspPath" value="base"/>
+    </commonPlugin>
+    
+    <plugin templatePath="/media/liuzh/A870ECF470ECCA60/work/workspace/code-generator/src/conf/facade" override="false" templateName="Facade.ftl" fileSuffix="Facade" fileExtension="java" fileTargetProject="/media/liuzh/A870ECF470ECCA60/work/workspace/trans/src/workflow" targetPackage="com.shangkang.facade">
+    	<property name="mapperPackage" value="com.shangkang.mapper"/>
+    	<property name="boPackage" value="com.shangkang.bo"/>
+    </plugin>
+
+	<plugin templatePath="/media/liuzh/A870ECF470ECCA60/work/workspace/code-generator/src/conf/facade" override="false" templateName="xml.ftl" fileSuffix="" fileExtension="xml" fileTargetProject="/media/liuzh/A870ECF470ECCA60/work/workspace/trans/src/workflow" targetPackage="ibatis.mapper">
+    	<property name="mapperPackage" value="com.shangkang.mapper"/>
+    </plugin>
+    
+    <plugin templatePath="/media/liuzh/A870ECF470ECCA60/work/workspace/code-generator/src/conf/facade" override="false" templateName="FacadeImpl.ftl" fileSuffix="FacadeImpl" fileExtension="java" fileTargetProject="/media/liuzh/A870ECF470ECCA60/work/workspace/trans/src/workflow" targetPackage="com.shangkang.facade.impl">
+    	<property name="boPackage" value="com.shangkang.bo"/>
+    	<property name="interfacePackage" value="com.shangkang.facade"/>
+    	<property name="servicePackage" value="com.shangkang.service"/>
+    </plugin>
+    
+    <plugin templatePath="/media/liuzh/A870ECF470ECCA60/work/workspace/code-generator/src/conf/service" override="false" templateName="Service.ftl" fileSuffix="Service" fileExtension="java" fileTargetProject="/media/liuzh/A870ECF470ECCA60/work/workspace/trans/src/workflow" targetPackage="com.shangkang.service">
+    	<property name="mapperPackage" value="com.shangkang.mapper"/>
+    	<property name="boPackage" value="com.shangkang.bo"/>
+    </plugin>
+    
+    <plugin templatePath="/media/liuzh/A870ECF470ECCA60/work/workspace/code-generator/src/conf/bo" override="false" templateName="Pojo.ftl" fileSuffix="" fileExtension="java" fileTargetProject="/media/liuzh/A870ECF470ECCA60/work/workspace/trans/src/workflow" targetPackage="com.shangkang.bo">
+    </plugin>
+    
+    <plugin templatePath="/media/liuzh/A870ECF470ECCA60/work/workspace/code-generator/src/conf/action" override="true" templateName="Jsp.ftl" fileSuffix="" fileExtension="jsp" fileTargetProject="/media/liuzh/A870ECF470ECCA60/work/workspace/trans/src/web" targetPackage="base">
+    </plugin>
+    
+    <plugin templatePath="/media/liuzh/A870ECF470ECCA60/work/workspace/code-generator/src/conf/action" override="true" templateName="JspPopWin.ftl" fileSuffix="PopWin" fileExtension="jsp" fileTargetProject="/media/liuzh/A870ECF470ECCA60/work/workspace/trans/src/web" targetPackage="base">
+    </plugin>
+    
+    <plugin templatePath="/media/liuzh/A870ECF470ECCA60/work/workspace/code-generator/src/conf/action" override="true" templateName="js.ftl" fileSuffix="" fileExtension="js" fileTargetProject="/media/liuzh/A870ECF470ECCA60/work/workspace/trans/src/web" targetPackage="include.js.base">
+    </plugin>
+    
+    <plugin templatePath="/media/liuzh/A870ECF470ECCA60/work/workspace/code-generator/src/conf/mapper" override="false" templateName="Mapper.ftl" fileSuffix="Mapper" fileExtension="java" fileTargetProject="/media/liuzh/A870ECF470ECCA60/work/workspace/trans/src/workflow" targetPackage="com.shangkang.mapper">
+    	<property name="boPackage" value="com.shangkang.bo"/>
+    </plugin>
+    
+    <plugin templatePath="/media/liuzh/A870ECF470ECCA60/work/workspace/code-generator/src/conf/action" override="false" templateName="Action.ftl" fileSuffix="Action" fileExtension="java" fileTargetProject="/media/liuzh/A870ECF470ECCA60/work/workspace/trans/src/workflow" targetPackage="com.shangkang.action">
+    	<property name="boPackage" value="com.shangkang.bo"/>
+    	<property name="facadePackage" value="com.shangkang.facade"/>
+    </plugin>
+    
+<!--     <plugin templatePath="F:/work/workspace/code-generator/src/conf/bo" override="true" templateName="PojoAs.ftl" fileSuffix="" fileExtension="as" fileTargetProject="F:/work/workspace/3kw/flex_3kw" targetPackage="com.shangkang.front.bo"> -->
+<!--     	<property name="boPackage" value="com.shangkang.bo"/> -->
+<!--     	<javaTypeResolver typeResolverImpl="org.code.generator.db.types.FlexTypeResolver"> -->
+<!-- 	    </javaTypeResolver> -->
+<!--     </plugin> -->
+    
+<!--     <plugin templatePath="F:/work/workspace/code-generator/src/conf/facade" override="false" templateName="Delegate.ftl" fileSuffix="Delegate" fileExtension="as" fileTargetProject="F:/work/workspace/3kw/flex_3kw" targetPackage="com.shangkang.front.delegate"> -->
+<!--     	<property name="flexBoPackage" value="com.shangkang.front.bo"/> -->
+<!--     	<javaTypeResolver typeResolverImpl="org.code.generator.db.types.FlexTypeResolver"> -->
+<!-- 	    </javaTypeResolver> -->
+<!--     </plugin> -->
+  </context>
+</configuration>

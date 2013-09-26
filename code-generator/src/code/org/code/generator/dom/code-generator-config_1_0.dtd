@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  The configuration element is the root element for configurations.
+-->
+<!ELEMENT configuration (properties?, classPathEntry*, context)>
+                        
+<!--
+  The properties element is used to define a standard Java properties file
+  that contains placeholders for use in the remainder of the configuration
+  file.
+-->
+<!ELEMENT properties EMPTY>
+<!ATTLIST properties
+  resource CDATA #IMPLIED
+  url CDATA #IMPLIED>
+  
+<!--
+  The context element is used to describe a context for generating files, and the source
+  tables.
+-->
+<!ELEMENT context (property*, jdbcConnection, javaTypeResolver?, table, commonPlugin*, plugin+)>
+<!ATTLIST context id ID #REQUIRED  
+  targetRuntime CDATA #IMPLIED>
+
+<!ELEMENT commonPlugin (property*)>
+<!ATTLIST commonPlugin
+  templatePath CDATA #REQUIRED
+  templateName CDATA #REQUIRED
+  fileSuffix CDATA #IMPLIED
+  fileExtension CDATA #IMPLIED
+  fileTargetProject CDATA #REQUIRED
+  targetPackage CDATA #IMPLIED
+  override CDATA #IMPLIED>
+  
+<!--
+  The plugin element is used to define a plugin.
+-->
+
+<!ELEMENT plugin (property*, javaTypeResolver?)>
+<!ATTLIST plugin
+  templatePath CDATA #REQUIRED
+  templateName CDATA #REQUIRED
+  fileSuffix CDATA #IMPLIED
+  fileExtension CDATA #IMPLIED
+  fileTargetProject CDATA #REQUIRED
+  targetPackage CDATA #IMPLIED
+  override CDATA #IMPLIED>
+  
+<!--
+  The jdbcConnection element is used to describe the JDBC connection that the generator
+  will use to introspect the database.
+-->
+<!ELEMENT jdbcConnection (property*)>
+<!ATTLIST jdbcConnection 
+  driverClass CDATA #REQUIRED
+  connectionURL CDATA #REQUIRED
+  userId CDATA #IMPLIED 
+  password CDATA #IMPLIED
+  remarksReporting CDATA #IMPLIED>
+
+<!--
+  The classPathEntry element is used to add the JDBC driver to the run-time classpath.
+  Repeat this element as often as needed to add elements to the classpath.
+-->
+<!ELEMENT classPathEntry EMPTY>
+<!ATTLIST classPathEntry
+  location CDATA #REQUIRED>
+
+<!--
+  The property element is used to add custom properties to many of the generator's
+  configuration elements.  See each element for example properties.
+  Repeat this element as often as needed to add as many properties as necessary
+  to the configuration element.
+-->
+<!ELEMENT property EMPTY>
+<!ATTLIST property
+  name CDATA #REQUIRED
+  value CDATA #REQUIRED>
+
+<!--
+  The javaTypeResolver element is used to define properties of the Java Type Resolver.
+  The Java Type Resolver is used to calculate Java types from database column information.
+  The default Java Type Resolver attempts to make JDBC DECIMAL and NUMERIC types easier
+  to use by substituting Integral types if possible (Long, Integer, Short, etc.)
+-->
+<!ELEMENT javaTypeResolver (property*)>
+<!ATTLIST javaTypeResolver
+  type CDATA #IMPLIED
+  typeResolverImpl CDATA #IMPLIED>
+
+<!--
+  The table element is used to specify a database table that will be the source information
+  for a set of generated objects.
+-->
+<!ELEMENT table (property*) >
+<!ATTLIST table
+  catalog CDATA #IMPLIED
+  schema CDATA #IMPLIED
+  tablesName CDATA #IMPLIED
+  tableType CDATA #IMPLIED
+  allTable CDATA #IMPLIED
+  tablePrefix CDATA #IMPLIED>
+
+
+  

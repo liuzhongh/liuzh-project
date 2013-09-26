@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src/conf"/>
+	<classpathentry kind="src" path="src/code"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/jdk"/>
+	<classpathentry kind="lib" path="libs/log4j-1.2.16.jar"/>
+	<classpathentry kind="lib" path="libs/ant-contrib-1.0b3.jar"/>
+	<classpathentry kind="lib" path="libs/java-tools.jar" sourcepath="/core/src/tools"/>
+	<classpathentry kind="lib" path="libs/java-core.jar" sourcepath="/core/src/core"/>
+	<classpathentry kind="lib" path="libs/freemarker-2.3.18.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/ant"/>
+	<classpathentry kind="lib" path="/media/liuzh/A870ECF470ECCA60/work/workspace/libs/ojdbc6.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
