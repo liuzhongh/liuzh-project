@@ -80,7 +80,7 @@
 	<classpathentry kind="lib" path="libs/org.springframework.asm-3.1.1.RELEASE.jar"/>
 	<classpathentry kind="lib" path="libs/org.springframework.aspects-3.1.1.RELEASE.jar"/>
 	<classpathentry kind="lib" path="libs/org.springframework.beans-3.1.1.RELEASE.jar"/>
-	<classpathentry kind="lib" path="libs/org.springframework.context-3.1.1.RELEASE.jar" sourcepath="E:/tools/spring-3.1.1/spring-framework-3.1.1.RELEASE/src/org.springframework.context-sources-3.1.1.RELEASE.jar"/>
+	<classpathentry kind="lib" path="libs/org.springframework.context-3.1.1.RELEASE.jar" sourcepath="/media/liuzh/000BD28100074CF0/tools/spring-3.1.1/spring-framework-3.1.1.RELEASE/src/org.springframework.context-sources-3.1.1.RELEASE.jar"/>
 	<classpathentry kind="lib" path="libs/org.springframework.context.support-3.1.1.RELEASE.jar"/>
 	<classpathentry kind="lib" path="libs/org.springframework.core-3.1.1.RELEASE.jar" sourcepath="E:/tools/spring-3.1.1/spring-framework-3.1.1.RELEASE/src/org.springframework.core-sources-3.1.1.RELEASE.jar"/>
 	<classpathentry kind="lib" path="libs/org.springframework.expression-3.1.1.RELEASE.jar"/>
