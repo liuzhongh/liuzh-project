@@ -1,0 +1,97 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity" >
+
+    <!--TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:text="@string/hello_world" />
+
+    <TextView
+        android:id="@+id/list_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:ems="30"
+        android:text="@string/list_title"
+        android:layout_alignParentRight="true" />
+
+    -->
+
+    <AutoCompleteTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/autoCompleteTextView"
+        android:completionThreshold="1"
+        android:layout_alignParentLeft="true"
+        android:popupBackground="#ffa6cb77"
+        android:textSize="10dp"
+        android:hint="@string/title_search_hint"
+        android:layout_toLeftOf="@+id/button" />
+
+    <!--SearchView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/searchView"
+        android:inputType="textFilter"
+        android:queryHint="@string/title_search_hint"
+        android:iconifiedByDefault="false"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true" /-->
+
+    <ListView
+        android:id="@+id/product_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/autoCompleteTextView">
+
+    </ListView>
+
+    <ListView
+        android:id="@+id/filter_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/autoCompleteTextView"
+        android:visibility="gone">
+    </ListView>
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/btn_search"
+        android:id="@+id/button"
+        android:textSize="10dp"
+        android:layout_above="@+id/product_list"
+        android:layout_toLeftOf="@+id/editText" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:id="@+id/editText"
+        android:layout_above="@+id/product_list"
+        android:layout_toLeftOf="@+id/clear_text"
+        android:text="@string/filter_txt"
+        android:textSize="15dp" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:id="@+id/clear_text"
+        android:layout_above="@+id/product_list"
+        android:layout_alignParentRight="true"
+        android:text="@string/clear_txt"
+        android:textSize="15dp" />
+
+</RelativeLayout><!-- From: file:/media/liuzh/A870ECF470ECCA60/work/project-android/3kw/src/main/res/layout/activity_main.xml -->
