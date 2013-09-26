@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="code-generator" basedir="." default="genfiles">
+	
+	
+	<!--  =============== 引用properties属性文件 ================== -->
+	<property file="build.properties" />
+	
+	<!-- =================================================================== -->
+	<!-- 变量设置 -->
+	<!-- =================================================================== -->
+
+	<!-- 代码目录 -->	
+	<property name="src.root" value="${project.root}/${project.name}/src" />
+	<property name="java.src" value="${project.root}/${project.name}/src/java" />
+	<property name="java.core" value="${project.root}/${project.name}/src/core" />
+	<property name="java.tools" value="${project.root}/${project.name}/src/tools" />
+	<property name="src.web" value="${project.root}/${project.name}/src/web" />
+	<property name="src.conf" value="${project.root}/${project.name}/src/conf" />
+	<property name="tomcat.conf.catalina.localhost" value="${tomcat.home.path}/conf/Catalina/localhost"/>
+
+	<!-- Java编译CLASSPATH -->
+	<path id="master-classpath">
+		<!-- 加入公用lib包 -->
+		<!--fileset dir="${lib.home}">
+			<include name="**/*.jar" />
+		</fileset-->
+		<fileset dir="${lib.home.local}">
+			<include name="**/*.jar" />
+		</fileset>
+	</path>
+
+	<target name="help"></target>
+	
+	<target name="genfiles" description="Generate the files">
+       <taskdef name="code-generator" classpath="${basedir}/bin"
+                classname="org.code.generator.ant.GeneratorAntTask"
+                >
+       		<classpath refid="master-classpath"	/>
+       </taskdef>
+       <code-generator configfile="${src.conf}/codeGeneratorConfig.xml" >
+         <!--propertyset>
+           <propertyref name="${src.root}"/>
+         </propertyset-->
+       </code-generator>
+     </target>
+</project>

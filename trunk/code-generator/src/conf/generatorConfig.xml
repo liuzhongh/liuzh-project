@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+  PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+  "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+<generatorConfiguration>
+  <classPathEntry location="F:\work\workspace\core\libs\ojdbc6.jar" />
+
+  <context id="Oracle2Tables" targetRuntime="MyBatis3">
+    <jdbcConnection driverClass="oracle.jdbc.OracleDriver"
+        connectionURL="jdbc:oracle:thin:@192.168.3.136:1521:sktest"
+        userId="uop_sk"
+        password="uop_sk">
+    </jdbcConnection>
+
+    <javaTypeResolver >
+      <property name="forceBigDecimals" value="false" />
+    </javaTypeResolver>
+
+    <javaModelGenerator targetPackage="test.bo" targetProject="F:\work\workspace\code-generator\src\code">
+      <property name="enableSubPackages" value="false" />
+      <property name="trimStrings" value="true" />
+    </javaModelGenerator>
+
+    <sqlMapGenerator targetPackage="test.xml"  targetProject="F:\work\workspace\code-generator\src\code">
+      <property name="enableSubPackages" value="false" />
+    </sqlMapGenerator>
+
+    <javaClientGenerator type="XMLMAPPER" targetPackage="test.dao"  targetProject="F:\work\workspace\code-generator\src\code">
+      <property name="enableSubPackages" value="false" />
+      <property name="rootInterface" value="com.shangkang.core.mapper.GenericIBatisMapper"/>
+    </javaClientGenerator>
+
+    <table schema="ucr_sk" tableName="T_PRODUCT" enableSelectByExample="false" enableDeleteByExample="false" enableCountByExample="false" enableUpdateByExample="false"
+     enableDeleteByPrimaryKey="true" enableInsert="true" enableSelectByPrimaryKey="true" enableUpdateByPrimaryKey="true">
+     	<generatedKey column="PRODUCT_ID" sqlStatement="Oracle" identity="true" />
+    </table>
+
+  </context>
+</generatorConfiguration>
