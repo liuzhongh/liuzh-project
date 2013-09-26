@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    >
+
+    <ImageView
+        android:id="@+id/iView"
+        android:layout_width="80dp"
+        android:layout_height="95dp"
+        android:contentDescription="@string/contentDes" />
+
+    <TextView android:id="@+id/skuName"
+        android:textSize="23sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/iView"
+        />
+    <TextView android:id="@+id/factoryName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/skuName"
+        android:layout_toRightOf="@+id/iView"
+        />
+   <!--  <TextView android:id="@+id/maxSale"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/minSale"
+        android:layout_toRightOf="@+id/iView"
+        /> -->
+   <!--  <TextView android:id="@+id/unit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/maxSale"
+        android:layout_toRightOf="@+id/iView"
+        /> -->
+    <TextView android:id="@+id/skwPrice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/factoryName"
+        android:layout_toRightOf="@+id/iView"
+        />
+
+</RelativeLayout><!-- From: file:/media/liuzh/A870ECF470ECCA60/work/project-android/3kw/src/main/res/layout/product_list.xml -->

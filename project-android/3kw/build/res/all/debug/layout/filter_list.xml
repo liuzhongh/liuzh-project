@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:background="#ff6b8297">
+    <HorizontalScrollView  android:layout_width="fill_parent" android:scrollbars="none"    android:fillViewport="true"
+        android:layout_height="wrap_content" android:fadingEdge="none"
+        android:id="@+id/scroll_bar">
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            >
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        >
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="@string/area_txt"
+        android:id="@+id/textView"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:textSize="10dp" />
+
+    <RadioGroup
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/textView"
+        android:orientation="horizontal"
+        android:contentDescription="@string/area_txt"
+        android:id="@+id/radioGroup">
+
+        <RadioButton
+            android:id="@+id/area_rd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/radio_txt"
+            android:button="@null"
+            android:checked="true"
+            android:textColor="@color/txt_color"
+            android:textSize="10dp">
+        </RadioButton>
+
+        </RadioGroup>
+        </LinearLayout>
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            >
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="@string/category_txt"
+        android:id="@+id/textView2"
+        android:layout_below="@+id/textView"
+        android:layout_alignParentLeft="true"
+        android:textSize="10dp" />
+
+    <RadioGroup
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/radioGroup"
+        android:orientation="horizontal"
+        android:layout_toRightOf="@+id/textView2"
+        android:id="@+id/radioGroup2">
+        <RadioButton
+            android:id="@+id/area_rd2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/radio_txt"
+            android:button="@null"
+            android:checked="true"
+            android:textColor="@color/txt_color"
+            android:textSize="10dp">
+        </RadioButton>
+        </RadioGroup>
+
+   <!-- <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="@string/category_txt"
+        android:id="@+id/textView3"
+        android:layout_below="@+id/textView2"
+        android:layout_alignParentLeft="true"
+        android:textSize="10dp" />
+
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/radioGroup3"
+        android:layout_below="@+id/radioGroup2"
+        android:orientation="horizontal"
+        android:layout_alignLeft="@+id/radioGroup2">
+        <RadioButton
+            android:id="@+id/area_rd3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/radio_txt"
+            android:button="@null"
+            android:checked="true"
+            android:textColor="@color/txt_color"
+            android:textSize="10dp">
+        </RadioButton>
+        </RadioGroup>-->
+    </LinearLayout>
+        </LinearLayout>
+
+    </HorizontalScrollView>
+
+</RelativeLayout><!-- From: file:/media/liuzh/A870ECF470ECCA60/work/project-android/3kw/src/main/res/layout/filter_list.xml -->

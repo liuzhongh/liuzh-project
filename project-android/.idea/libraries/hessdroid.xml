@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="hessdroid">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/3kw/libs/hessdroid.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
