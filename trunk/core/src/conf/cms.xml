@@ -21,11 +21,11 @@
 		<requestUri>^/flyingbuy.html$</requestUri>
 		<include>
 			<from>b2b/buyContentHead.jsp</from>
-			<to>buyContentHead.htm</to>
+			<to>^/buyContentHead.htm$</to>
 		</include>
 		<include>
 			<from>flyingbuyContent.html</from>
-			<to>flyingbuyContent.htm</to>
+			<to>^/flyingbuyContent.htm$</to>
 		</include>
 	</parser>
 	
