@@ -12,6 +12,7 @@ import com.shangkang.android.constant.Constant;
 import com.shangkang.bo.Sku;
 import com.shangkang.dto.ProductDetailDto;
 import com.shangkang.dto.SkuDto;
+import com.shangkang.helper.CacheDataHelper;
 import com.shangkang.helper.CacheHelper;
 import com.shangkang.tools.UtilHelper;
 
@@ -63,16 +64,33 @@ public class ProductAdapter extends ArrayAdapter<ProductDetailDto> {
 
 		String imgUrl = dto.getMainFileUpload().getUrl();
 		img.setImageBitmap(null);
+        Bitmap bitmap = null;
 
-		if (!UtilHelper.isEmpty(imgUrl)) {
-			//异步加载图片
-			LoadImage task = new LoadImage(img);
-			
-			task.execute(imgUrl);
-		}
+        try
+        {
+            if (!UtilHelper.isEmpty(imgUrl)) {
+                bitmap = (Bitmap) CacheDataHelper.getInstance().getBitmap(imgUrl);
+                Log.d(TAG, " img key:" + imgUrl + " value :" + bitmap);
+
+                if(bitmap == null)
+                {
+                    //异步加载图片
+                    LoadImage task = new LoadImage(img);
+
+                    task.execute(imgUrl);
+                }
+                else
+                {
+                    img.setImageBitmap(bitmap);
+                }
+            }
+        } finally {
+            if(bitmap != null)
+                bitmap = null;
+        }
 
 		skuName.setText(dto.getProduct().getProductName());
-		factoryName.setText("生产厂家:" + dto.getFactory().getFactoryName());
+		factoryName.setText("供应商:" + dto.getFactory().getFactoryName());
 //		maxSale.setText(String.valueOf(sku.getMaxSale()) + sku.getUnit());
 		skwPrice.setText("价格:" + String.valueOf(dto.getShowPrice()) + "元");
 //		unit.setText(sku.getUnit());
@@ -103,23 +121,17 @@ public class ProductAdapter extends ArrayAdapter<ProductDetailDto> {
 			try {
 				if (!UtilHelper.isEmpty(imgUrl)) {
 
-                    SoftReference softBitmap = (SoftReference) CacheHelper.getSingleton().getCache().get(imgUrl);
+                    URL url = new URL(Constant.REMOTE_URL + imgUrl);
 
-                    if (softBitmap != null)
-                        bitmap = (Bitmap) softBitmap.get();
-                    else
-                    {
-                        URL url = new URL(Constant.REMOTE_URL + imgUrl);
-
-                        // 取得链接
-                        conn = url.openConnection();
-                        conn.connect();
-                        // 打开盖URL对应的资源的输入流
-                        is = conn.getInputStream();
-                        // 从inputstream中解析图片
-                        bitmap = BitmapFactory.decodeStream(is);
-                        CacheHelper.getSingleton().getCache().put(imgUrl, new SoftReference<Object>(bitmap));
-                    }
+                    // 取得链接
+                    conn = url.openConnection();
+                    conn.connect();
+                    // 打开盖URL对应的资源的输入流
+                    is = conn.getInputStream();
+                    // 从inputstream中解析图片
+                    bitmap = BitmapFactory.decodeStream(is);
+                    CacheDataHelper.getInstance().putBitmap(imgUrl, bitmap);
+                    Log.d(TAG, " put img key:" + imgUrl + " value :" + bitmap);
 				}
 			} catch (MalformedURLException e) {
 				e.printStackTrace();

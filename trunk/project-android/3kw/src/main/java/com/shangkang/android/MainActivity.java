@@ -22,6 +22,7 @@ import com.shangkang.bo.CommonType;
 import com.shangkang.core.bo.Pagination;
 import com.shangkang.dto.AutoCompletedDto;
 import com.shangkang.dto.ProductDetailDto;
+import com.shangkang.helper.CacheDataHelper;
 import com.shangkang.helper.CacheHelper;
 import com.shangkang.remote.ProductSearchRemote;
 import com.shangkang.tools.UtilHelper;
@@ -59,6 +60,9 @@ public class MainActivity extends Activity {
         filterView = (TextView) findViewById(R.id.editText);
         filterList = (ListView) findViewById(R.id.filter_list);
         clearView = (TextView) findViewById(R.id.clear_text);
+
+        CacheDataHelper.getInstance().init(getBaseContext());
+
         /*autoList = (ListView) findViewById(R.id.auto_list);
         searchView = (SearchView) findViewById(R.id.searchView);
 
@@ -402,22 +406,25 @@ public class MainActivity extends Activity {
         protected String doInBackground(String... strings) {
             ProductSearchRemote productSearchRemote = new ProductSearchRemote();
 
-            SoftReference softAreas = (SoftReference) CacheHelper.getSingleton().getCache().get("areas");
+            /*SoftReference softAreas = (SoftReference) CacheHelper.getSingleton().getCache().get("areas");
             SoftReference softProduct = (SoftReference) CacheHelper.getSingleton().getCache().get("productTypes");
 
             if (softAreas != null)
                 areas = (List<CommonType>) softAreas.get();
             if (softProduct != null)
-                productTypes = (List<CommonType>) softProduct.get();
+                productTypes = (List<CommonType>) softProduct.get();*/
+
+            areas = (List<CommonType>) CacheDataHelper.getInstance().get("areas");
+            productTypes = (List<CommonType>) CacheDataHelper.getInstance().get("productTypes");
 
             if (UtilHelper.isEmpty(areas)) {
                 areas = productSearchRemote.listAreas();
-                CacheHelper.getSingleton().getCache().put("areas", new SoftReference<Object>(areas));
+                CacheDataHelper.getInstance().put("areas", areas);
             }
 
             if (UtilHelper.isEmpty(productTypes)) {
                 productTypes = productSearchRemote.queryAllProductTypeCommonType();
-                CacheHelper.getSingleton().getCache().put("productTypes", new SoftReference<Object>(productTypes));
+                CacheDataHelper.getInstance().put("productTypes", productTypes);
             }
             return null;
         }
