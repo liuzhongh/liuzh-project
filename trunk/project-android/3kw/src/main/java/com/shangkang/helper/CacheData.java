@@ -116,7 +116,7 @@ public class CacheData {
 
         byte[] bt = this.load(key);
 
-        if (bt != null)
+        if (bt != null && bt.length > 0)
             return BitmapFactory.decodeByteArray(bt, 0, bt.length);
 
         return null;
@@ -138,7 +138,7 @@ public class CacheData {
     private byte[] readBitmap(Bitmap value) {
         ByteArrayOutputStream outputStream = null;
         try {
-            outputStream = new ByteArrayOutputStream(value.getWidth() * value.getHeight() * 4);
+            outputStream = new ByteArrayOutputStream();
             value.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
             return outputStream.toByteArray();
         } catch (Exception e) {
