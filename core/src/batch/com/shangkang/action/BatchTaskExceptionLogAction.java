@@ -18,6 +18,7 @@ package com.shangkang.action;
 
 import java.util.List;
 
+import com.core.batch.facade.BatchFacade;
 import com.core.batch.facade.BatchTaskExceptionLogFacade;
 import com.shangkang.bo.BatchTaskExceptionLog;
 import com.shangkang.core.action.BaseAction;
@@ -33,11 +34,35 @@ public class BatchTaskExceptionLogAction extends BaseAction {
 	private List<java.lang.Long> primaryKeys;
 	private BatchTaskExceptionLog batchTaskExceptionLog;
 	private BatchTaskExceptionLogFacade batchTaskExceptionLogFacade;
+	private BatchFacade batchFacade;
+	private String stackMessage;
+	private Long taskOid;
 
 	public BatchTaskExceptionLogAction()
 	{
 		super();
 		batchTaskExceptionLogFacade = (BatchTaskExceptionLogFacade) this.getBean("batchTaskExceptionLogFacade");
+		batchFacade = (BatchFacade) this.getBean("batchFacade");
+	}
+
+	public Long getTaskOid()
+	{
+		return taskOid;
+	}
+
+	public void setTaskOid(Long taskOid)
+	{
+		this.taskOid = taskOid;
+	}
+
+	public String getStackMessage()
+	{
+		return stackMessage;
+	}
+
+	public void setStackMessage(String stackMessage)
+	{
+		this.stackMessage = stackMessage;
 	}
 
 	public BatchTaskExceptionLog getBatchTaskExceptionLog() {
@@ -111,5 +136,10 @@ public class BatchTaskExceptionLogAction extends BaseAction {
 		batchTaskExceptionLogFacade.update(batchTaskExceptionLog);
 		
 		return "updateBatchTaskExceptionLog";
+	}
+	
+	public String findStackMessageByTaskOid()throws ServiceException {
+		stackMessage = batchFacade.getStackMessageByTaskOid(taskOid);
+		return SUCCESS;
 	}
 }
