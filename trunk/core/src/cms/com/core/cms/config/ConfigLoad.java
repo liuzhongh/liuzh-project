@@ -71,12 +71,12 @@ public class ConfigLoad {
 			configuration.setBaseGeneratedPath(baseGeneratedPath);
 	}
 	
-	public boolean validateRequestUri(String requestUri)
+	public Rule validateRequestUri(String requestUri, String forwardUri)
 	{
-		return validated.validateRequestUri(requestUri, configuration.getRequestUris());
+		return validated.validateRequestUri(requestUri, forwardUri, configuration.getRuleMap());
 	}
 	
-	public void resolveRule2Html(ServletRequest request, ServletResponse response,
+	public void resolveRule2Html(ServletRequest request, ServletResponse response, Rule rule,
 			FilterChain chain) throws IOException, ServletException
 	{
 		log.debug("---------------------开始验证产生静态文件----------------------------");
@@ -98,8 +98,6 @@ public class ConfigLoad {
 					.append(hsRequest.getLocalAddr()).append(":").append(hsRequest.getLocalPort()).append(hsRequest.getRequestURI()).toString();
 			String matcherUrl = hsRequest.getRequestURI().replace(hsRequest.getContextPath(), "");
 
-			Rule rule = ruleMap.get("^" + matcherUrl + "$");
-			
 			String requestUri = rule.getRequestUri();
 			
 			if(null != rule && !UtilHelper.isEmpty(requestUri))
