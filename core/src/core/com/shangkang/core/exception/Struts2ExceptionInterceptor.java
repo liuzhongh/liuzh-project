@@ -36,7 +36,9 @@ public class Struts2ExceptionInterceptor extends StaticParametersInterceptor {
 			return invocation.invoke();
 		} catch (Exception e)
 		{
-
+			if(e instanceof AutoProcessException)
+				throw (AutoProcessException) e;
+			
 			HttpServletRequest request = ServletActionContext.getRequest();
 			HttpServletResponse response = ServletActionContext.getResponse();
 
