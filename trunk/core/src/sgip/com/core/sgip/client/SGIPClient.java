@@ -117,113 +117,168 @@ public class SGIPClient {
 	private static boolean headKey(SelectionKey key ,List<String> listUserNumber,String content) throws Exception
 	{
 		boolean quit = false;
-		if (key.isConnectable())
+		try
 		{
-			SocketChannel socketChannel = (SocketChannel) key.channel();
-			// 由于非阻塞模式，connect只管发起连接请求，finishConnect()方法会阻塞到链接结束并返回是否成功
-			// 另外还有一个isConnectionPending()返回的是是否处于正在连接状态(还在三次握手中)
-			if (socketChannel.finishConnect())
+			if (key.isConnectable())
 			{
-				// 链接成功了可以做一些自己的处理，略
-				logger.debug("********* nio socket connect success **********");
-				// 处理完后必须吧OP_CONNECT关注去掉，改为关注OP_READ
-				key.interestOps(SelectionKey.OP_WRITE);
-				key.attach(SGIPConstant.SGIP_BIND);
-			}
-		}
-		if(key.isReadable())
-		{
-			logger.debug("****************nio socket into readable ********");
-			ByteArrayOutputStream baos = new ByteArrayOutputStream();
-			SocketChannel socketChannel = (SocketChannel) key.channel();
-			socketChannel.configureBlocking(false);
-			ByteBuffer buffer = ByteBuffer.allocate(1024);
-			try
-			{
-				byte[] bytes;
-				int size = socketChannel.read(buffer);
-				if (size >= 0)
+				SocketChannel socketChannel = (SocketChannel) key.channel();
+				// 由于非阻塞模式，connect只管发起连接请求，finishConnect()方法会阻塞到链接结束并返回是否成功
+				// 另外还有一个isConnectionPending()返回的是是否处于正在连接状态(还在三次握手中)
+				if (socketChannel.finishConnect())
 				{
-					buffer.flip();
-					bytes = new byte[size];
-					buffer.get(bytes);
-					baos.write(bytes);
-					buffer.clear();
-				}
-				bytes = baos.toByteArray();
-				
-				long receiveCommandId = (Long)key.attachment();
-				if(receiveCommandId == SGIPConstant.SGIP_BIND_RESP)
-				{
-					SGIPMsg returnMsg = SGIPFactory.constructSGIPMsg(bytes);
-					logger.debug("*********end receive bindResp*********returnMsg=" + returnMsg);
-					key.attach(SGIPConstant.SGIP_SUBMIT);
-				}else if(receiveCommandId == SGIPConstant.SGIP_SUBMIT_RESP)
-				{
-					SGIPMsg returnMsg = SGIPFactory.constructSGIPMsg(bytes);
-					logger.debug("*********end receive submitResp*********returnMsg=" + returnMsg);
-					key.attach(SGIPConstant.SGIP_UNBIND);//判断集合是否处理完成 没有完成继续发送
-				}else if(receiveCommandId == SGIPConstant.SGIP_UNBIND_RESP)
-				{
-					SGIPMsg returnMsg = SGIPFactory.constructSGIPMsg(bytes);
-					logger.debug("*********end receive unbindResp*********returnMsg=" + returnMsg);
-				}
-				if(receiveCommandId != SGIPConstant.SGIP_UNBIND_RESP)
-				{
+					// 链接成功了可以做一些自己的处理，略
+					logger.debug("********* nio socket connect success **********");
+					// 处理完后必须吧OP_CONNECT关注去掉，改为关注OP_READ
 					key.interestOps(SelectionKey.OP_WRITE);
-				}else
+					key.attach(SGIPConstant.SGIP_BIND);
+				}
+			}
+			if (key.isReadable())
+			{
+				logger.debug("****************nio socket into readable ********");
+				ByteArrayOutputStream baos = new ByteArrayOutputStream();
+				SocketChannel socketChannel = (SocketChannel) key.channel();
+				socketChannel.configureBlocking(false);
+				ByteBuffer buffer = ByteBuffer.allocate(1024);
+				try
+				{
+					byte[] bytes;
+					int size = socketChannel.read(buffer);
+					if (size >= 0)
+					{
+						buffer.flip();
+						bytes = new byte[size];
+						buffer.get(bytes);
+						baos.write(bytes);
+						buffer.clear();
+					}
+					bytes = baos.toByteArray();
+
+					int result = 0;
+
+					long receiveCommandId = (Long) key.attachment();
+					if (receiveCommandId == SGIPConstant.SGIP_BIND_RESP)
+					{
+						SGIPMsg returnMsg = SGIPFactory.constructSGIPMsg(bytes);
+						logger.debug("*********end receive bindResp*********returnMsg="
+								+ returnMsg);
+						if (null != returnMsg.getCommand()
+								&& ((BindResp) returnMsg.getCommand())
+										.getResult() == 0)
+						{
+							key.attach(SGIPConstant.SGIP_SUBMIT);
+						} else
+						{
+							BindResp br = (BindResp) returnMsg.getCommand();
+							result = br.getResult();
+							logger.debug("****************** bindResp's result:	"
+									+ result);
+							String errorMsg = SGIPConstant.ERROR_CODE
+									.get(result + "");
+							logger.error("错误消息:" + errorMsg);
+							quit = true;
+							throw new Exception(errorMsg);
+						}
+					} else if (receiveCommandId == SGIPConstant.SGIP_SUBMIT_RESP)
+					{
+						SGIPMsg returnMsg = SGIPFactory.constructSGIPMsg(bytes);
+						logger.debug("*********end receive submitResp*********returnMsg="
+								+ returnMsg);
+						if (null != returnMsg.getCommand()
+								&& ((SubmitResp) returnMsg.getCommand())
+										.getResult() == 0)
+						{
+							key.attach(SGIPConstant.SGIP_UNBIND);//判断集合是否处理完成 没有完成继续发送
+						} else
+						{
+							SubmitResp br = (SubmitResp) returnMsg.getCommand();
+							result = br.getResult();
+							logger.debug("****************** SubmitResp's result:	"
+									+ result);
+							String errorMsg = SGIPConstant.ERROR_CODE
+									.get(result + "");
+							logger.error("错误消息:" + errorMsg);
+							quit = true;
+							throw new Exception(errorMsg);
+						}
+					} else if (receiveCommandId == SGIPConstant.SGIP_UNBIND_RESP)
+					{
+						SGIPMsg returnMsg = SGIPFactory.constructSGIPMsg(bytes);
+						logger.debug("*********end receive unbindResp*********returnMsg="
+								+ returnMsg);
+					}
+					if (receiveCommandId != SGIPConstant.SGIP_UNBIND_RESP)
+					{
+						key.interestOps(SelectionKey.OP_WRITE);
+					} else
+					{
+						quit = true;
+						socketChannel.close();
+					}
+					logger.debug("********* quit=" + quit);
+				} catch (Exception e)
 				{
 					quit = true;
-					socketChannel.close();
-				}
-				logger.debug("********* quit=" + quit );
-			}catch(Exception e)
-			{
-				e.printStackTrace();
-			}finally{
-				baos.close();
-				if(buffer != null)
+					logger.error("Error", e);
+					throw e;
+				} finally
 				{
-					buffer = null;
+					baos.close();
+					if (buffer != null)
+					{
+						buffer = null;
+					}
 				}
 			}
-		}
-		if(quit)
-		{
-			return quit;
-		}
-		if(key.isWritable())
-		{
-			logger.debug("****************nio socket into writable ********");
-			SocketChannel socketChannel = (SocketChannel) key.channel();
-			socketChannel.configureBlocking(false);
-			
-			long sendCommandId = (Long)key.attachment();
-			if(sendCommandId == SGIPConstant.SGIP_BIND)
+			if (quit)
 			{
-				SGIPMsg sgipMsg = SGIPFactory.getSGIPMsg(SGIPConstant.SGIP_BIND);
-				ByteBuffer block = ByteBuffer.wrap(sgipMsg.getByteData());
-				logger.debug("*********send bind *********sgipMsg=" + sgipMsg);
-				socketChannel.write(block);
-				key.attach(SGIPConstant.SGIP_BIND_RESP);
-			}else if(sendCommandId == SGIPConstant.SGIP_SUBMIT)
-			{
-				SGIPMsg sgipMsg = SGIPFactory.getSGIPMsg(SGIPConstant.SGIP_SUBMIT);
-				sgipMsg.setUserNumbers(listUserNumber, content);
-				ByteBuffer block = ByteBuffer.wrap(sgipMsg.getByteData());
-				logger.debug("*********send submit *********sgipMsg=" + sgipMsg);
-				socketChannel.write(block);
-				key.attach(SGIPConstant.SGIP_SUBMIT_RESP);
-				messageHandler.handleSubmitMessage(sgipMsg.getHead(), (Submit)sgipMsg.getCommand());
-			}else if(sendCommandId == SGIPConstant.SGIP_UNBIND)
-			{
-				SGIPMsg sgipMsg = SGIPFactory.getSGIPMsg(SGIPConstant.SGIP_UNBIND);
-				ByteBuffer block = ByteBuffer.wrap(sgipMsg.getByteData());
-				logger.debug("*********send unbind *********sgipMsg=" + sgipMsg);
-				socketChannel.write(block);
-				key.attach(SGIPConstant.SGIP_UNBIND_RESP);
+				return quit;
 			}
-			key.interestOps(SelectionKey.OP_READ);
+			if (key.isWritable())
+			{
+				logger.debug("****************nio socket into writable ********");
+				SocketChannel socketChannel = (SocketChannel) key.channel();
+				socketChannel.configureBlocking(false);
+
+				long sendCommandId = (Long) key.attachment();
+				if (sendCommandId == SGIPConstant.SGIP_BIND)
+				{
+					SGIPMsg sgipMsg = SGIPFactory
+							.getSGIPMsg(SGIPConstant.SGIP_BIND);
+					ByteBuffer block = ByteBuffer.wrap(sgipMsg.getByteData());
+					logger.debug("*********send bind *********sgipMsg="
+							+ sgipMsg);
+					socketChannel.write(block);
+					key.attach(SGIPConstant.SGIP_BIND_RESP);
+				} else if (sendCommandId == SGIPConstant.SGIP_SUBMIT)
+				{
+					SGIPMsg sgipMsg = SGIPFactory
+							.getSGIPMsg(SGIPConstant.SGIP_SUBMIT);
+					sgipMsg.setUserNumbers(listUserNumber, content);
+					ByteBuffer block = ByteBuffer.wrap(sgipMsg.getByteData());
+					logger.debug("*********send submit *********sgipMsg="
+							+ sgipMsg);
+					socketChannel.write(block);
+					key.attach(SGIPConstant.SGIP_SUBMIT_RESP);
+					messageHandler.handleSubmitMessage(sgipMsg.getHead(),
+							(Submit) sgipMsg.getCommand());
+				} else if (sendCommandId == SGIPConstant.SGIP_UNBIND)
+				{
+					SGIPMsg sgipMsg = SGIPFactory
+							.getSGIPMsg(SGIPConstant.SGIP_UNBIND);
+					ByteBuffer block = ByteBuffer.wrap(sgipMsg.getByteData());
+					logger.debug("*********send unbind *********sgipMsg="
+							+ sgipMsg);
+					socketChannel.write(block);
+					key.attach(SGIPConstant.SGIP_UNBIND_RESP);
+				}
+				key.interestOps(SelectionKey.OP_READ);
+			}
+		} catch (Exception e)
+		{
+			logger.error("Error", e);
+			quit = true;
+			throw e;
 		}
 		return quit;
 	}
@@ -255,7 +310,8 @@ public class SGIPClient {
 			}
 		} catch (Exception e)
 		{
-			e.printStackTrace();
+			logger.error("Error", e);
+			throw e;
 		} finally
 		{
 			channel.close();
@@ -300,6 +356,7 @@ public class SGIPClient {
 					{
 						String errorMsg = SGIPConstant.ERROR_CODE.get(result + "");
 						logger.error("错误消息:" + errorMsg);
+						throw new Exception(errorMsg);
 					} else
 					{
 						int size = listUserNumber.size();
@@ -344,6 +401,7 @@ public class SGIPClient {
 									{
 										String errorMsg = SGIPConstant.ERROR_CODE.get(result + "");
 										logger.error("错误消息:" + errorMsg);
+										throw new Exception(errorMsg);
 									} else
 									{
 										logger.debug("*********submit success *********");
@@ -391,7 +449,7 @@ public class SGIPClient {
 					os.close();
 				} catch (IOException e)
 				{
-					e.printStackTrace();
+					logger.error("Error", e);
 				}
 			}
 			if(is != null)
@@ -401,7 +459,7 @@ public class SGIPClient {
 					is.close();
 				} catch (IOException e)
 				{
-					e.printStackTrace();
+					logger.error("Error", e);
 				}
 			}
 			if(null != socket)
@@ -412,7 +470,7 @@ public class SGIPClient {
 					socket.close();
 				} catch (IOException e)
 				{
-					e.printStackTrace();
+					logger.error("Error", e);
 				}
 			}
 		}
@@ -449,7 +507,7 @@ public class SGIPClient {
 	{
 		List<String> listUserNumber = new ArrayList<String>();
 		listUserNumber.add("18508429828");
-		listUserNumber.add("15074814855");
+		//listUserNumber.add("15074814855");
 		sendMsg(listUserNumber, "just test test药交网http://yj.3kw.com短信发送测试-NIO方式 ",true);
 		sendMsg(listUserNumber, "just test test药交网http://yj.3kw.com短信发送测试-SOCKET方式 ",false);
 	}
