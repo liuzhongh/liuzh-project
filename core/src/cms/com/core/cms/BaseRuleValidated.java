@@ -17,6 +17,8 @@
 package com.core.cms;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -44,6 +46,65 @@ public class BaseRuleValidated {
 			
 			if(matcher.find())
 				return true;
+		}
+		return false;
+	}
+	
+	public Rule validateRequestUri(String url, String forwardUri, Map<String, Rule> ruleMap)
+	{
+		if(UtilHelper.isEmpty(ruleMap))
+			return null;
+		Pattern pattern;
+		Matcher matcher;
+		String key;
+		Rule rule;
+		
+		for(Entry<String, Rule> regexEntry : ruleMap.entrySet())
+		{
+			key = regexEntry.getKey();
+			rule = regexEntry.getValue();
+			
+			pattern = Pattern.compile(key);
+		
+			matcher = pattern.matcher(url);
+			
+			if(matcher.find())
+				return rule;
+			
+			if(!UtilHelper.isEmpty(forwardUri))
+			{
+				matcher = pattern.matcher(forwardUri);
+				
+				if(matcher.find())
+					return rule;
+			}
+		}
+		return null;
+	}
+	
+	public boolean validateRequestUri(String url, String forwardUri, List<String> regexList)
+	{
+		if(UtilHelper.isEmpty(regexList))
+			return false;
+		Pattern pattern;
+		Matcher matcher;
+		
+		for(String regex : regexList)
+		{
+			pattern = Pattern.compile(regex);
+		
+			matcher = pattern.matcher(url);
+			
+			if(matcher.find())
+				return true;
+			
+			if(!UtilHelper.isEmpty(forwardUri))
+			{
+				matcher = pattern.matcher(forwardUri);
+				
+				if(matcher.find())
+					return true;
+			}
 		}
 		return false;
 	}

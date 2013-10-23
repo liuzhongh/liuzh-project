@@ -62,16 +62,21 @@ public class ContentGenerateFilter implements Filter {
 	{
 		final HttpServletRequest hsRequest = (HttpServletRequest) request;
         
+		log.debug("Forward uri :" + hsRequest.getAttribute("javax.servlet.forward.servlet_path"));
+	
         log.debug(hsRequest.getRequestURI() + " url = " + hsRequest.getRequestURL() + " servlet : " + hsRequest.getServletPath());
         log.debug("Include uri :" + hsRequest.getAttribute("javax.servlet.include.servlet_path"));
         
-        if(!load.validateRequestUri(hsRequest.getRequestURI().replace(hsRequest.getContextPath(), "")) 
+        Rule rule = load.validateRequestUri(hsRequest.getRequestURI().replace(hsRequest.getContextPath(), ""), 
+        		(String)hsRequest.getAttribute("javax.servlet.forward.servlet_path"));
+        
+        if(null == rule 
         		|| "Y".equalsIgnoreCase(request.getParameter("isHttpClientRequest")))
         {
         	chain.doFilter(request, response);
         	return;
         }
-        load.resolveRule2Html(request, response, chain);
+        load.resolveRule2Html(request, response, rule, chain);
         
 	}
 
