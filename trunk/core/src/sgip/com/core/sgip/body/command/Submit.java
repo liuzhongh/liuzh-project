@@ -25,8 +25,6 @@ import com.core.sgip.constant.ClientConstant;
 import com.core.sgip.constant.SGIPConstant;
 import com.core.sgip.util.SGIPUtils;
 
-import edu.emory.mathcs.backport.java.util.Arrays;
-
 public class Submit extends SGIPCommand {
 	
 	private static int COMMAND_FIX_LENGTH = 21 +21 +1 +5 +10 +1 +6 +6 + 3*1 +16 + 16 + 5*1 + 4 + 8;
