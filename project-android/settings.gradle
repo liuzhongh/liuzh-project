@@ -1,1 +1,1 @@
-include ':3kw', ':Test'
+include ':3kw', ':Test', ':IM', ':MSM'
