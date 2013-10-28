@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+
+    <dimen name="button_height">45dip</dimen>
+    <dimen name="bottom_tab_font_size">20dip</dimen>
+    <dimen name="bottom_tab_padding_up">5dip</dimen>
+    <dimen name="bottom_tab_padding_drawable">2dip</dimen>
+    <dimen name="switch_logo_bottom_padding">30sp</dimen>
+    
+
+</resources>
