@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="login_name_txt">登录名：</string>
+    <string name="password_txt">密码：</string>
+    <string name="login_name_ipt_txt">请输入登录名</string>
+    <string name="login_btn">登录</string>
+    <string name="send_btn_txt">发送</string>
+    <string name="title_activity_chat">ChatActivity</string>
+
+    <string name="app_name">拨号宝</string>
+    <string name="login_title">拨号宝登录设置</string>
+    <string name="save_checkbox">保存账户</string>
+    <string name="reset_btn">重置</string>
+    <string name="loginName">账户:</string>
+    <string name="password">密码:</string>
+    <string name="remember_password">记住密码</string>
+    <string name="hide_login">隐身登录</string>
+    <string name="auto_login">自动登录</string>
+
+    <!-- 登录提示 -->
+    <string name="message_invalid_username_password">错误的用户名或密码</string>
+    <string name="message_server_unavailable">无法连接到服务器</string>
+    <string name="message_user_disabled">用户被禁用</string>
+    <string name="message_user_expired">账户已过期</string>
+    <string name="message_userip_no_access">IP不合法,已被禁用</string>
+    <string name="unrecoverable_error">发生未知异常,连接失败</string>
+
+    <!-- 网络和内存卡提示 -->
+    <string name="prompt">提示</string>
+    <string name="check_connection">无可用网络连接，请检查网络设置！</string>
+    <string name="check_sdcard">请检查内存卡！</string>
+    <string name="menu_settings">设置</string>
+    <string name="close">关闭</string>
+    <string name="exit">退出</string>
+    <string name="confirm">确定</string>
+    <string name="cancel">取消</string><string name="server_txt">服务器地址:</string>
+
+    <!-- 缺省的服务器配置 -->
+    <integer name="server_port">5222</integer>
+    <string name="server_host_ip">192.168.13.118</string>
+    <string name="xmpp_service_name">liuzh-ubuntu</string><string name="from_user_name">拨号帐号</string>
+    <bool name="is_remember">true</bool>
+
+</resources>
