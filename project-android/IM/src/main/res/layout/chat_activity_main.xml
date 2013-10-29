@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="382dp"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:id="@+id/login_name_tv"
+        android:layout_gravity="left|center_vertical"
+        android:height="20dp" />
+
+    <EditText
+        android:layout_width="382dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/send_msg_edit"
+        android:layout_gravity="left|center_vertical" />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/send_btn_txt"
+        android:id="@+id/send_btn"
+        android:layout_gravity="left|center_vertical" />
+
+    <ListView
+        android:layout_width="382dp"
+        android:layout_height="fill_parent"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:id="@+id/rec_msg_lv"
+        android:layout_gravity="left|center_vertical"
+        android:enabled="false" />
+
+</LinearLayout>
