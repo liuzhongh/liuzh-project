@@ -14,6 +14,7 @@
 	<property name="java.src" value="${project.root}/${project.name}/src/java" />
 	<property name="java.core" value="${project.root}/${project.name}/src/core" />
 	<property name="java.tools" value="${project.root}/${project.name}/src/tools" />
+	<property name="java.sgip" value="${project.root}/${project.name}/src/sgip" />
 	<property name="java.cms" value="${project.root}/${project.name}/src/cms" />
 	<property name="java.bigpipe" value="${project.root}/${project.name}/src/bigpipe" />
 	<property name="java.batch" value="${project.root}/${project.name}/src/batch" />
@@ -125,6 +126,10 @@
 	
 	<target name="jar-tools">
 		<jar-java jar-java-path="temp/building/tools" jar-java-src="${java.tools}" jar-java-name="java-tools"/>
+	</target>
+	
+	<target name="jar-sgip">
+		<jar-java jar-java-path="temp/building/sgip" jar-java-src="${java.sgip}" jar-java-name="sgip"/>
 	</target>
 	
 	<target name="jar-mail">
