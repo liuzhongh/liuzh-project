@@ -18,6 +18,7 @@ package com.core.views.bigpipe.supports;
 
 import javax.servlet.ServletContext;
 
+import org.apache.struts2.dispatcher.Dispatcher;
 import org.apache.struts2.views.freemarker.FreemarkerManager;
 
 import freemarker.template.Configuration;
@@ -49,7 +50,7 @@ public class FreeMarkerInstance {
 		{
 			if (instance == null)
 			{
-				freemarkerManager = new FreemarkerManager();
+				freemarkerManager = Dispatcher.getInstance().getContainer().getInstance(FreemarkerManager.class);
 				
 				config = freemarkerManager
 						.getConfiguration(servletContext);
