@@ -17,7 +17,6 @@
 package com.core.sgip.util;
 
 import java.io.UnsupportedEncodingException;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 
