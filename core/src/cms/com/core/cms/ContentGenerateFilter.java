@@ -62,10 +62,10 @@ public class ContentGenerateFilter implements Filter {
 	{
 		final HttpServletRequest hsRequest = (HttpServletRequest) request;
         
-		log.debug("Forward uri :" + hsRequest.getAttribute("javax.servlet.forward.servlet_path"));
+		log.debug("当前请求转向uri为:" + hsRequest.getAttribute("javax.servlet.forward.servlet_path"));
 	
         log.debug(hsRequest.getRequestURI() + " url = " + hsRequest.getRequestURL() + " servlet : " + hsRequest.getServletPath());
-        log.debug("Include uri :" + hsRequest.getAttribute("javax.servlet.include.servlet_path"));
+        log.debug("包含页面 uri为:" + hsRequest.getAttribute("javax.servlet.include.servlet_path"));
         
         Rule rule = load.validateRequestUri(hsRequest.getRequestURI().replace(hsRequest.getContextPath(), ""), 
         		(String)hsRequest.getAttribute("javax.servlet.forward.servlet_path"));
