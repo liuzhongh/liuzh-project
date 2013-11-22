@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	targetNamespace="cache2.0.xsd"
+	elementFormDefault="qualified"
+	xmlns="cache2.0.xsd">
+	
+	<xs:complexType name="contextType">
+		<xs:attribute name="defaultNamespace" type="xs:string" use="required" />
+		<xs:attribute name="defaultRegeneratedInterval" type="xs:positiveInteger"
+			use="required" default="72000" />
+	</xs:complexType>
+
+	<xs:complexType name="requestUriType">
+		<xs:simpleContent>
+			<xs:extension base="xs:string">
+				<xs:attribute name="caseSensitive" type="xs:boolean"
+					default="true" use="optional" />
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+	
+	<xs:complexType name="parserType">
+		<xs:sequence>
+			<xs:element name="requestUri" type="requestUriType"
+				minOccurs="1" maxOccurs="1" />
+			<xs:element name="namespace" type="xs:string"
+				minOccurs="0" maxOccurs="1" />
+			<xs:element name="regeneratedInterval" type="xs:positiveInteger"
+				minOccurs="0" maxOccurs="1" default="20" />
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:simpleType name="cacheTypeDetail">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="page" />
+			<xs:enumeration value="fragment" />
+		</xs:restriction>
+	</xs:simpleType>
+	
+	<xs:complexType name="cacheType">
+		<xs:sequence>
+			<xs:element name="parser" type="parserType" minOccurs="1"
+					maxOccurs="unbounded" />
+		</xs:sequence>
+		<xs:attribute name="type" type="cacheTypeDetail"
+					default="page" use="optional" />
+	</xs:complexType>
+
+	<xs:element name="configuration">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="context" type="contextType" />
+				<xs:element name="cache" type="cacheType" minOccurs="1"
+					maxOccurs="unbounded" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+</xs:schema>

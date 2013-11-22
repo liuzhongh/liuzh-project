@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	targetNamespace="http://localhost"
+	xmlns="http://localhost">
+
+	<xs:complexType name="contextType">
+		<xs:attribute name="site" type="xs:anyURI" use="required" />
+		<xs:attribute name="contextPath" type="xs:string" use="optional" />
+		<xs:attribute name="baseGeneratedPath" type="xs:string" use="optional" />
+		<xs:attribute name="defaultGeneratedPath" type="xs:string"
+			use="optional" />
+		<xs:attribute name="defaultRegeneratedInterval" type="xs:positiveInteger"
+			use="optional" default="20" />
+	</xs:complexType>
+
+	<xs:simpleType name="dispatcherType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="include" />
+			<xs:enumeration value="forward" />
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:complexType name="requestUriType">
+		<xs:simpleContent>
+			<xs:extension base="xs:string">
+				<xs:attribute name="caseSensitive" type="xs:boolean"
+					default="true" use="optional" />
+				<xs:attribute name="dispatcher" type="dispatcherType"
+					default="include" use="optional" />
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+	
+	<xs:complexType name="includeType">
+		<xs:sequence>
+			<xs:element name="from" type="xs:string" minOccurs="1"
+				maxOccurs="1" />
+			<xs:element name="to" type="xs:string" minOccurs="0"
+				maxOccurs="1" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="parserType">
+		<xs:sequence>
+			<xs:element name="requestUri" type="requestUriType"
+				minOccurs="1" maxOccurs="1" />
+			<xs:element name="generatedPath" type="xs:string"
+				minOccurs="0" maxOccurs="1" />
+			<xs:element name="regeneratedInterval" type="xs:positiveInteger"
+				minOccurs="0" maxOccurs="1" default="20" />
+			<xs:choice>
+				<xs:element name="include" type="includeType" maxOccurs="unbounded"/>
+				<xs:element name="forward" type="xs:string" />
+			</xs:choice>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:element name="configuration">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="context" type="contextType" />
+				<xs:element name="parser" type="parserType" minOccurs="1"
+					maxOccurs="unbounded" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+</xs:schema>
