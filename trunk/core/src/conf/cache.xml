@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="file://media/liuzh/A870ECF470ECCA60/work/workspace/core/src/cache/com/core/cache/xml/cache2.0.xsd">
+<!-- <configuration
+	xmlns="http://localhost"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:SchemaLocation="http://localhost cache2.0.xsd"> -->
+	<!-- 前台页面缓存，过期时间为秒 -->
+	<context defaultNamespace="webCache" defaultRegeneratedInterval="72000"/>
+	<cache type="page">
+		<parser>
+			<requestUri></requestUri>
+			<generatedPath></generatedPath>
+			<regeneratedInterval></regeneratedInterval>
+			<include></include>
+		</parser>
+	</cache>
+</configuration>
