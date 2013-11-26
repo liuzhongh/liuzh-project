@@ -16,6 +16,9 @@
  **/
 package com.core.cache;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class Rule {
 
@@ -32,6 +35,8 @@ public class Rule {
 	private String regeneratedInterval;
 	
 	private boolean requestUriCaseSensitive;
+	
+	private List<String> includes = new ArrayList<String>();
 	
 	/**
 	 * @return the namespace
@@ -107,14 +112,28 @@ public class Rule {
 		this.cacheType = cacheType;
 	}
 
+	public List<String> getIncludes()
+	{
+		return includes;
+	}
+	
+	public void addInclude(String include)
+	{
+		includes.add(include);
+	}
+
+	public void setIncludes(List<String> includes)
+	{
+		this.includes = includes;
+	}
+
 	@Override
 	public String toString()
 	{
 		return "Rule [requestUri=" + requestUri + ", cacheType=" + cacheType
 				+ ", namespace=" + namespace + ", regeneratedInterval="
 				+ regeneratedInterval + ", requestUriCaseSensitive="
-				+ requestUriCaseSensitive + "]";
+				+ requestUriCaseSensitive + ", includes=" + includes + "]";
 	}
-
 	
 }
