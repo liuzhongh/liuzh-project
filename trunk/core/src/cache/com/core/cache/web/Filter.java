@@ -120,10 +120,10 @@ public abstract class Filter implements javax.servlet.Filter {
         
         rule = load.validateRequestUri(httpRequest.getRequestURI().replace(httpRequest.getContextPath(), ""));
         
-        return (rule != null && noCache(rule, httpRequest));
+        return (rule != null && shouldCache(rule, httpRequest));
     }
     
-    protected abstract boolean noCache(Rule rule, HttpServletRequest httpRequest);
+    protected abstract boolean shouldCache(Rule rule, HttpServletRequest httpRequest);
 
     /**
      * This method should throw IOExceptions, not wrap them.

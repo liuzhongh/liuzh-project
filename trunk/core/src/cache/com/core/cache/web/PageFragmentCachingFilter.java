@@ -99,7 +99,7 @@ public abstract class PageFragmentCachingFilter extends CachingFilter {
 	}
 
 	@Override
-	protected boolean noCache(Rule rule, HttpServletRequest httpRequest)
+	protected boolean shouldCache(Rule rule, HttpServletRequest httpRequest)
 	{
 		return BaseRuleValidated.validateRequestUri((String)httpRequest.getAttribute("javax.servlet.include.servlet_path"), rule.getIncludes());
 	}
