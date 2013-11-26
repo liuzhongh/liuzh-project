@@ -7,7 +7,7 @@
 	<xs:complexType name="contextType">
 		<xs:attribute name="defaultNamespace" type="xs:string" use="required" />
 		<xs:attribute name="defaultRegeneratedInterval" type="xs:positiveInteger"
-			use="required" default="72000" />
+			use="required" default="1200" />
 	</xs:complexType>
 
 	<xs:complexType name="requestUriType">
@@ -26,7 +26,9 @@
 			<xs:element name="namespace" type="xs:string"
 				minOccurs="0" maxOccurs="1" />
 			<xs:element name="regeneratedInterval" type="xs:positiveInteger"
-				minOccurs="0" maxOccurs="1" default="20" />
+				minOccurs="0" maxOccurs="1" default="1200" />
+			<xs:element name="include" type="xs:string"
+				minOccurs="0" maxOccurs="unbounded" />
 		</xs:sequence>
 	</xs:complexType>
 	
