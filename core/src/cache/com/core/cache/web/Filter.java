@@ -118,14 +118,12 @@ public abstract class Filter implements javax.servlet.Filter {
         LOG.debug("包含页面 uri为:" + httpRequest.getAttribute("javax.servlet.include.servlet_path"));
         LOG.debug("getRequestURI" + httpRequest.getRequestURI());
         
-        String noFilter = httpRequest.getParameter(NO_FILTER);//如果页面请求中加入了参数NO_FILTER,则不进行缓存
-        
-        LOG.debug("是否不缓存:" + noFilter);
-        
         rule = load.validateRequestUri(httpRequest.getRequestURI().replace(httpRequest.getContextPath(), ""));
         
-        return (rule != null && noFilter == null);
+        return (rule != null && noCache(rule, httpRequest));
     }
+    
+    protected abstract boolean noCache(Rule rule, HttpServletRequest httpRequest);
 
     /**
      * This method should throw IOExceptions, not wrap them.
