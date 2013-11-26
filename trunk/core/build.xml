@@ -15,7 +15,7 @@
 	<property name="java.core" value="${project.root}/${project.name}/src/core" />
 	<property name="java.tools" value="${project.root}/${project.name}/src/tools" />
 	<property name="java.sgip" value="${project.root}/${project.name}/src/sgip" />
-	<property name="java.cms" value="${project.root}/${project.name}/src/cms" />
+	<property name="java.cache" value="${project.root}/${project.name}/src/cache" />
 	<property name="java.bigpipe" value="${project.root}/${project.name}/src/bigpipe" />
 	<property name="java.batch" value="${project.root}/${project.name}/src/batch" />
 	<property name="java.mail" value="${project.root}/${project.name}/src/mail" />
@@ -136,8 +136,8 @@
 		<jar-java jar-java-path="temp/building/mail" jar-java-src="${java.mail}" jar-java-name="java-mail"/>
 	</target>
 	
-	<target name="jar-cms">
-		<jar-java jar-java-path="temp/building/cms" jar-java-src="${java.cms}" jar-java-name="java-cms"/>
+	<target name="jar-cache">
+		<jar-java jar-java-path="temp/building/cache" jar-java-src="${java.cache}" jar-java-name="java-cache"/>
 	</target>
 	
 	<target name="jar-bigpipe">
@@ -156,7 +156,7 @@
 	
 	<!-- ***********************************混淆任务 **************************-->
   	<target name="obfuscate">
-      <taskdef name="yguard" classname="com.yworks.yguard.YGuardTask" classpath="E:\tools\struts\yguard-2.4\yguard-2.4\lib/yguard.jar" />
+      <taskdef name="yguard" classname="com.yworks.yguard.YGuardTask" classpath="/media/liuzh/000BD28100074CF0/tools/struts/yguard-2.4/yguard-2.4/lib/yguard.jar" />
           <!-- 不同工程需要修改的地方 -->
       <yguard>
       	 <rename logfile="${obfuscationlog}">
@@ -181,15 +181,15 @@
          </expose>
          <!--设置所有用到得第三方库，不混淆它们-->
          <externalclasses>
-         	<pathelement location="${lib.home.local}/xwork-core-2.3.1.2.jar" />
-         	<pathelement location="${lib.home.local}/struts2-core-2.3.1.2.jar" />
+         	<pathelement location="${lib.home.local}/xwork-core-2.3.15.3.jar" />
+         	<pathelement location="${lib.home.local}/struts2-core-2.3.15.3.jar" />
          	<pathelement location="${lib.home.local}/servlet-api.jar" />
          	<pathelement location="${lib.home.local}/el-api.jar" />
          	<pathelement location="${lib.home.local}/jstl-1.2.jar" />
          	<pathelement location="${lib.home.local}/jsp-api.jar" />
-         	<pathelement location="${lib.home.local}/freemarker-2.3.18.jar" />
-         	<pathelement location="${lib.home.local}/commons-logging-1.1.1.jar" />
-         	<pathelement location="${lib.home.local}/json-lib-2.1-jdk15.jar" />
+         	<pathelement location="${lib.home.local}/freemarker-2.3.19.jar" />
+         	<pathelement location="${lib.home.local}/commons-logging-1.1.3.jar" />
+         	<pathelement location="${lib.home.local}/json-lib-2.4-jdk15.jar" />
          	<pathelement location="temp/java-tools.jar" />
          </externalclasses>
  
@@ -201,7 +201,7 @@
  		</rename>
       	 <!--输入和输出jar包，可以有多行-->
          <!--*********************输入、输出设置开始*************************-->
-         <inoutpair in="temp/java-bigpipe-temp.jar" out="F:/work/workspace/3kw/libs/java-bigpipe.jar" />
+         <inoutpair in="temp/java-bigpipe-temp.jar" out="/media/liuzh/A870ECF470ECCA60/work/workspace/libs/java-bigpipe.jar" />
          <!--*********************输入、输出设置结束*************************-->
       </yguard>
           <!-- 不同工程需要修改的地方 -->
