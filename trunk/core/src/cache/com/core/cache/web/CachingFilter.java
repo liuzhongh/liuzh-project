@@ -47,13 +47,16 @@ import net.sf.ehcache.constructs.web.ResponseUtil;
 import net.sf.ehcache.constructs.web.SerializableCookie;
 import net.sf.ehcache.constructs.web.filter.FilterNonReentrantException;
 
-import com.core.cache.manager.CacheManager;
+import com.core.cache.handler.CacheHandler;
+import com.core.cache.handler.WebCacheNamespaceHandler;
 
 public abstract class CachingFilter extends Filter {
 
 	private static final Logger LOG = LoggerFactory.getLogger(CachingFilter.class);
 
     private final VisitLog visitLog = new VisitLog();
+    
+    private CacheHandler cacheHandler;
 
     /**
      * Initialises blockingCache to use. The BlockingCache created by this
@@ -94,6 +97,10 @@ public abstract class CachingFilter extends Filter {
                 }
             }
         }*/
+    	
+    	cacheHandler = getCacheHandler();
+    	
+    	WebCacheNamespaceHandler.getSingleton().populateCacheHandler(cacheHandler);
     }
 
     /**
@@ -101,6 +108,7 @@ public abstract class CachingFilter extends Filter {
      */
     protected void doDestroy() {
         // noop
+    	cacheHandler = null;
     }
 
     /**
@@ -171,9 +179,8 @@ public abstract class CachingFilter extends Filter {
         try {
             checkNoReentry(request);
             String namespace = getCacheNamespace();
-            CacheManager cacheManager = getCacheManager();
             
-            pageInfo = cacheManager.getWithNamespace(namespace, key);
+            pageInfo = cacheHandler.getWithNamespace(namespace, key);
             
             if (pageInfo == null) {
                 try {
@@ -185,7 +192,7 @@ public abstract class CachingFilter extends Filter {
                             LOG.debug("PageInfo ok. Adding to cache with key "
                                     + key);
                         }
-                        cacheManager.setWithNamespace(namespace, key, pageInfo, getTimeToLiveSeconds());
+                        cacheHandler.setWithNamespace(namespace, key, pageInfo, getTimeToLiveSeconds());
                     } else {
                         if (LOG.isDebugEnabled()) {
                             LOG.debug("PageInfo was not ok(200). Putting null into cache "
@@ -385,7 +392,7 @@ public abstract class CachingFilter extends Filter {
      * 
      * @return the name of the cache to use for this filter.
      */
-    protected abstract CacheManager getCacheManager();
+    protected abstract CacheHandler getCacheHandler();
 
     /**
      * CachingFilter works off a key.

@@ -23,6 +23,7 @@ import javax.servlet.FilterChain;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.core.cache.BaseRuleValidated;
 import com.core.cache.Rule;
 
 import net.sf.ehcache.constructs.web.AlreadyGzippedException;
@@ -95,6 +96,12 @@ public abstract class PageFragmentCachingFilter extends CachingFilter {
 	protected String initCacheType()
 	{
 		return Rule.CACHE_TYPE_FRAGMENT;
+	}
+
+	@Override
+	protected boolean noCache(Rule rule, HttpServletRequest httpRequest)
+	{
+		return BaseRuleValidated.validateRequestUri((String)httpRequest.getAttribute("javax.servlet.include.servlet_path"), rule.getIncludes());
 	}
 
 }
