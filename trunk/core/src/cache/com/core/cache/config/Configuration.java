@@ -37,6 +37,7 @@ import org.w3c.dom.Text;
 import org.xml.sax.SAXParseException;
 
 import com.core.cache.Rule;
+import com.core.cache.handler.WebCacheNamespaceHandler;
 import com.shangkang.tools.UtilHelper;
 
 public class Configuration {
@@ -69,6 +70,7 @@ public class Configuration {
 	public void setDefaultNamespace(String defaultNamespace)
 	{
 		this.defaultNamespace = defaultNamespace;
+		WebCacheNamespaceHandler.getSingleton().populateNamespace(defaultNamespace);
 	}
 
 
@@ -224,22 +226,43 @@ public class Configuration {
             rule = new Rule();
             
             Node requestUriNode = parserElement.getElementsByTagName("requestUri").item(0);
-    		Node generatedPathNode = parserElement.getElementsByTagName("namespace").item(0);
+    		Node namespacePathNode = parserElement.getElementsByTagName("namespace").item(0);
     		Node regeneratedIntervalNode = parserElement.getElementsByTagName("regeneratedInterval").item(0);
+    		processIncludeNodes(parserElement, rule);
     		
     		String requestUri = getNodeValue(requestUriNode);
+    		String namespace = getNodeValue(namespacePathNode);
     		
     		addRequestUri(requestUri);
     		
     		rule.setCacheType(cacheType);
     		rule.setRequestUri(requestUri);
-    		rule.setNamespace(getNodeValue(generatedPathNode));
+    		rule.setNamespace(namespace);
     		rule.setRegeneratedInterval(getNodeValue(regeneratedIntervalNode));
+    		
+    		WebCacheNamespaceHandler.getSingleton().populateNamespace(namespace);
     		
     		if ("true".equalsIgnoreCase(getAttrValue(requestUriNode, "caseSensitive"))) 
     			rule.setRequestUriCaseSensitive(true);
     		
     		ruleMap.put(rule.getRequestUri(), rule);
+		}
+	}
+	
+	private void processIncludeNodes(Element ruleElement, Rule rule)
+	{
+		NodeList includeNodes = ruleElement.getElementsByTagName("include");
+		
+		if(UtilHelper.isEmpty(includeNodes))
+			return;
+		
+		for (int j = 0; j < includeNodes.getLength(); j++) 
+		{
+			Node node = includeNodes.item(j);
+			
+            if (node == null) continue;
+            
+            rule.addInclude(getNodeValue(node));
 		}
 	}
 
