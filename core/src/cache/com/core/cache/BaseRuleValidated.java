@@ -31,10 +31,11 @@ public class BaseRuleValidated {
 
 	private static Log			log							= LogFactory.getLog(BaseRuleValidated.class);
 	
-	public boolean validateRequestUri(String url, List<String> regexList)
+	public static boolean validateRequestUri(String url, List<String> regexList)
 	{
-		if(UtilHelper.isEmpty(regexList))
+		if(UtilHelper.isEmpty(regexList) || UtilHelper.isEmpty(url))
 			return false;
+		
 		Pattern pattern;
 		Matcher matcher;
 		
@@ -47,6 +48,7 @@ public class BaseRuleValidated {
 			if(matcher.find())
 				return true;
 		}
+		
 		return false;
 	}
 	
