@@ -204,7 +204,7 @@ public abstract class CachingFilter extends Filter {
                 } catch (final Throwable throwable) {
                     // Must unlock the cache if the above fails. Will be logged
                     // at Filter
-                    
+                    LOG.error("", throwable);
                     throw new Exception(throwable);
                 }
             } else {
@@ -214,6 +214,7 @@ public abstract class CachingFilter extends Filter {
             }
         } catch (LockTimeoutException e) {
             // do not release the lock, because you never acquired it
+        	LOG.error("", e);
             throw e;
         } finally {
             // all done building page, reset the re-entrant flag
@@ -254,8 +255,16 @@ public abstract class CachingFilter extends Filter {
 
     protected int getTimeToLiveSeconds()
     {
-    	String regeneratedInterval = this.getRule().getRegeneratedInterval() == null ? this.getConfiguration().getDefaultRegeneratedInterval() : this.getRule().getRegeneratedInterval() ;
-    
+    	String regeneratedInterval = null;
+    	
+    	if(getConfiguration() == null)
+    		return 36000;
+    	
+    	if(getRule() != null && getRule().getRegeneratedInterval() != null)
+    		regeneratedInterval = getRule().getRegeneratedInterval();
+    	else
+    		regeneratedInterval = getConfiguration().getDefaultRegeneratedInterval();
+    	
     	return Integer.parseInt(regeneratedInterval);
     }
     
