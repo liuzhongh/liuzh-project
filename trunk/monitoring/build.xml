@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="monitoring" basedir="." default="help">
+
+
+	<!--  =============== 引用properties属性文件 ================== -->
+	<property file="build.properties" />
+
+	<!-- =================================================================== -->
+	<!-- 变量设置 -->
+	<!-- =================================================================== -->
+
+	<!-- 代码目录 -->
+	<property name="src.root" value="${project.root}/${project.name}/src" />
+	<property name="tomcat.conf.catalina.localhost" value="${tomcat.home.path}/conf/Catalina/localhost"/>
+
+	<!-- Java编译CLASSPATH -->
+	<path id="master-classpath">
+		<fileset dir="${lib.home}">
+			<include name="**/*.jar" />
+		</fileset>
+	</path>
+
+	<!-- =================================================================== -->
+	<!-- 帮助信息 -->
+	<!-- =================================================================== -->
+	<target name="help">
+		<echo message=" Application Build File for JDK1.6" />
+		<echo message="用法：ant -[target]" />
+		<echo message="------------------------------------------------------" />
+		<echo message="[target]如下" />
+		<echo message="  clean        清空所有输出文件包括build和部署目录" />
+		<echo message="  exploded-app 创建展开目录形式的应用结构" />
+		<echo message="  war          创建用于发布的WAR包文件（适用于生产打包、远程部署）" />
+		<echo message="  deploy       将扩展目录直接copy到appserver运行环境下(适用于编译环境与运行环境分离)" />
+		<echo message="  i18n         将资源文件转换成UTF-8码,并copy到 classpath下(适用于热部署)" />
+		<echo message="------------------------------------------------------" />
+	</target>
+
+	<macrodef name="jar-java">
+		<attribute name="jar-java-path" />
+		<attribute name="jar-java-src" />
+		<attribute name="jar-java-name" />
+		<sequential>
+			<mkdir dir="@{jar-java-path}" />
+			<javac destdir="@{jar-java-path}" debug="true" encoding="UTF-8" target="1.6" deprecation="false" optimize="false" failonerror="true" fork="true" memoryMaximumSize="512m">
+				<src path="@{jar-java-src}" />
+				<classpath refid="master-classpath" />
+			</javac>
+			<copy todir="@{jar-java-path}">
+				<fileset dir="@{jar-java-src}">
+					<include name="**/*.xml" />
+				</fileset>
+			</copy>
+			<copy todir="@{jar-java-path}">
+				<fileset dir="@{jar-java-src}">
+					<include name="**/*.properties" />
+				</fileset>
+			</copy>
+			<jar basedir="@{jar-java-path}" jarfile="temp/@{jar-java-name}.jar" compress="false" />
+			<delete dir="@{jar-java-path}" />
+		</sequential>
+	</macrodef>
+	
+	<target name="jar-monitoring">
+		<jar-java jar-java-path="building/monitoring" jar-java-src="${src.root}" jar-java-name="monitoring-core"/>
+	</target>
+	
+	<!-- clean -->
+	<target name="clean" description="清空所有输出文件包括build和部署目录">
+		<delete dir="temp" />
+		<delete dir="${deploy_dir}/${war.name}" />
+		<delete file="${project.root}/${project.name}/${war.name}.war"/>
+		<delete>
+			<fileset dir="${tomcat.conf.catalina.localhost}" excludes="manager.xml,host-manager.xml" />
+		</delete>
+	</target>
+
+	<target name="create-vm-catalog-file">
+		<echo message="创建tomcat工程虚拟目录"></echo>
+		<delete>
+			<fileset dir="${tomcat.conf.catalina.localhost}" excludes="manager.xml,host-manager.xml" />
+		</delete>
+		<touch file="${tomcat.conf.catalina.localhost}/${project.name}.xml"/>
+		<concat append="true" destfile="${tomcat.conf.catalina.localhost}/${project.name}.xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;&#10;</concat>
+		<concat append="true" destfile="${tomcat.conf.catalina.localhost}/${project.name}.xml">&lt;Context path="/${project.name}" docBase="${web.source.path}"&#10;</concat> 
+		<concat append="true" destfile="${tomcat.conf.catalina.localhost}/${project.name}.xml">&#x20;&#x20;&#x20;&#x20;reloadable="true" &gt;&#10;&lt;/Context&gt;</concat> 		
+	</target>
+</project>
