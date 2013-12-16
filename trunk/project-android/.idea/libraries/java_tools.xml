@@ -1,6 +1,8 @@
 <component name="libraryTable">
   <library name="java-tools">
     <CLASSES>
+      <root url="jar://$PROJECT_DIR$/IM/libs/java-tools.jar!/" />
+      <root url="jar://$PROJECT_DIR$/IM/libs/java-tools.jar!/" />
       <root url="jar://$PROJECT_DIR$/3kw/libs/java-tools.jar!/" />
     </CLASSES>
     <JAVADOC />

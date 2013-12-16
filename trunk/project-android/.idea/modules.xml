@@ -3,6 +3,9 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/3kw/3kw.iml" filepath="$PROJECT_DIR$/3kw/3kw.iml" />
+      <module fileurl="file://$PROJECT_DIR$/IM/IM.iml" filepath="$PROJECT_DIR$/IM/IM.iml" />
+      <module fileurl="file://$PROJECT_DIR$/MSM/MSM.iml" filepath="$PROJECT_DIR$/MSM/MSM.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Test/Test.iml" filepath="$PROJECT_DIR$/Test/Test.iml" />
       <module fileurl="file://$PROJECT_DIR$/project-android.iml" filepath="$PROJECT_DIR$/project-android.iml" />
     </modules>
   </component>
