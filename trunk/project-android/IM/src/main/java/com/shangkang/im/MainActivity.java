@@ -82,9 +82,11 @@ public class MainActivity extends Activity {
 
         final EditText xmppHostText = (EditText) loginView.findViewById(R.id.server_ip_edt);
         final EditText fromUserText = (EditText) loginView.findViewById(R.id.from_user_name_edt);
+        final EditText serverNameText = (EditText) loginView.findViewById(R.id.server_name_edt);
 
         xmppHostText.setText(loginConfig.getXmppHost());
         fromUserText.setText(loginConfig.getFromUserName());
+        serverNameText.setText(loginConfig.getXmppServiceName());
 
         switch (item.getItemId()) {
             case R.id.menu_login_set:
@@ -102,9 +104,11 @@ public class MainActivity extends Activity {
                                                 .doEmpty(xmppHostText.getText()
                                                         .toString());
                                         String fromUser = StringUtil.doEmpty(fromUserText.getText().toString());
+                                        String serverName = StringUtil.doEmpty(serverNameText.getText().toString());
 
                                         loginConfig.setXmppHost(xmppHost);
                                         loginConfig.setFromUserName(fromUser);
+                                        loginConfig.setXmppServiceName(serverName);
                                         ConnectHelper.getInstance().init(
                                                 loginConfig);
                                         MainActivity.this
