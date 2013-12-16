@@ -17,6 +17,18 @@ android:layout_height="fill_parent"
     android:layout_margin="10dip"
     android:textColor="@color/blue"
     />
+<TextView android:text="@string/server_name_txt"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="10dip"
+    android:textSize="25px"
+    />
+<EditText android:id="@+id/server_name_edt"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:layout_margin="10dip"
+    android:textColor="@color/blue"
+    />
 <TextView android:text="@string/from_user_name"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
