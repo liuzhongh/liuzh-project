@@ -20,6 +20,7 @@ import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smack.packet.XMPPError;
+import org.jivesoftware.smackx.OfflineMessageManager;
 
 /**
  * Created by liuzh on 13-10-28.
@@ -29,6 +30,8 @@ public class BootService extends BroadcastReceiver {
     private final static String NETWORK_ACTION = "android.net.conn.CONNECTIVITY_CHANGE";
 
     public void onReceive(Context context, Intent intent) {
+
+        Log.d(TAG, "随机启动拨号App！");
 
         boolean hasNetwork = validateInternet(context);
 
@@ -54,19 +57,28 @@ public class BootService extends BroadcastReceiver {
     }
 
     private boolean validateInternet(Context context) {
-        ConnectivityManager manager = (ConnectivityManager) context
-                .getSystemService(context.CONNECTIVITY_SERVICE);
-        if (manager == null) {
-            return false;
-        } else {
-            NetworkInfo[] info = manager.getAllNetworkInfo();
-            if (info != null) {
-                for (int i = 0; i < info.length; i++) {
-                    if (info[i].getState() == NetworkInfo.State.CONNECTED) {
-                        return true;
+        try
+        {
+            ConnectivityManager manager = (ConnectivityManager) context
+                    .getSystemService(context.CONNECTIVITY_SERVICE);
+            if (manager == null) {
+                return false;
+            } else {
+                NetworkInfo[] info = manager.getAllNetworkInfo();
+                if (info != null) {
+                    for (int i = 0; i < info.length; i++) {
+                        if (info[i].getState() == NetworkInfo.State.CONNECTED) {
+                            return true;
+                        }
                     }
                 }
             }
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+            Log.e(TAG, e.getMessage());
+
+            return false;
         }
         return false;
     }
@@ -74,6 +86,7 @@ public class BootService extends BroadcastReceiver {
     class LoginAction extends AsyncTask<LoginConfig, Integer, Integer> {
 
         private String fromUserName;
+        private String serviceName;
         private Context context;
 
         LoginAction(Context context) {
@@ -90,6 +103,7 @@ public class BootService extends BroadcastReceiver {
                 String username = loginConfig.getUsername();
                 String password = loginConfig.getPassword();
                 fromUserName = loginConfig.getFromUserName();
+                serviceName = loginConfig.getXmppServiceName();
 
                 Log.d(TAG, "随系统启动登录,当前用户为:" + username);
 
@@ -99,6 +113,10 @@ public class BootService extends BroadcastReceiver {
                             .getConnection();
                     connection.connect();
                     connection.login(username, password); // 登录
+
+                    OfflineMessageManager offlineMessageManager = new OfflineMessageManager(connection);
+
+                    offlineMessageManager.deleteMessages();
                     connection.sendPacket(new Presence(Presence.Type.available));
                     return Constant.LOGIN_SECCESS;
                 } catch (Exception xee) {
@@ -135,6 +153,7 @@ public class BootService extends BroadcastReceiver {
 
                     intent.setClass(context, MsgListerService.class);
                     intent.putExtra(Constant.FROM_USER_NAME, fromUserName);
+                    intent.putExtra(Constant.XMPP_SEIVICE_NAME, serviceName);
                     intent.putExtra(Constant.IS_BOOT_SERVICE, true);
 
                     context.startService(intent);

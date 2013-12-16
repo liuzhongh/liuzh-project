@@ -30,11 +30,12 @@ public class MsgListerService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
 
         String userName = intent.getStringExtra(Constant.FROM_USER_NAME);
+        String serviceName = intent.getStringExtra(Constant.XMPP_SEIVICE_NAME);
         boolean isBootService = intent.getBooleanExtra(Constant.IS_BOOT_SERVICE, false);
 
         Log.d(TAG, "It is from boot service :" + isBootService);
 
-        doListerMsg(userName, MsgListerService.this);
+        doListerMsg(userName, serviceName, MsgListerService.this);
 
         if(!isBootService)
             ((ActivityManager)this.getApplication()).exit();
@@ -46,7 +47,7 @@ public class MsgListerService extends Service {
         return null;
     }
 
-    private void doListerMsg(String userName, final MsgListerService msgListerService)
+    private void doListerMsg(String userName, String serviceName, final MsgListerService msgListerService)
     {
         XMPPConnection connection = ConnectHelper.getInstance().getConnection();
 
@@ -58,7 +59,7 @@ public class MsgListerService extends Service {
 
             }
         });
-        Chat newChat = chatManager.createChat(userName + "@liuzh-ubuntu", new MessageListener() {
+        Chat newChat = chatManager.createChat(userName + "@" + serviceName, new MessageListener() {
 
             @Override
             public void processMessage(Chat chat, Message message) {
