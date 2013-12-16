@@ -64,29 +64,22 @@ public class ProductAdapter extends ArrayAdapter<ProductDetailDto> {
 
 		String imgUrl = dto.getMainFileUpload().getUrl();
 		img.setImageBitmap(null);
-        Bitmap bitmap = null;
 
-        try
-        {
-            if (!UtilHelper.isEmpty(imgUrl)) {
-                bitmap = (Bitmap) CacheDataHelper.getInstance().getBitmap(imgUrl);
-                Log.d(TAG, " img key:" + imgUrl + " value :" + bitmap);
+        if (!UtilHelper.isEmpty(imgUrl)) {
+            Bitmap bitmap = CacheDataHelper.getInstance().getBitmap(imgUrl);
+            Log.d(TAG, " img key:" + imgUrl + " value :" + bitmap);
 
-                if(bitmap == null)
-                {
-                    //异步加载图片
-                    LoadImage task = new LoadImage(img);
+            if(bitmap == null)
+            {
+                //异步加载图片
+                LoadImage task = new LoadImage(img);
 
-                    task.execute(imgUrl);
-                }
-                else
-                {
-                    img.setImageBitmap(bitmap);
-                }
+                task.execute(imgUrl);
             }
-        } finally {
-            if(bitmap != null)
-                bitmap = null;
+            else
+            {
+                img.setImageBitmap(bitmap);
+            }
         }
 
 		skuName.setText(dto.getProduct().getProductName());

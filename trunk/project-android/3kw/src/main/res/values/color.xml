@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <drawable name="def">#ffffaf55</drawable>
-    <drawable name="blk">#ff5838dd</drawable>
     <color name="def">#ffffaf55</color>
     <color name="blk">#ff5838dd</color>
     <color name="org">#ff000000</color>

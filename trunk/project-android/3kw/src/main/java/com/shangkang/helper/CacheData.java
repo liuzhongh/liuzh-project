@@ -138,7 +138,7 @@ public class CacheData {
     private byte[] readBitmap(Bitmap value) {
         ByteArrayOutputStream outputStream = null;
         try {
-            outputStream = new ByteArrayOutputStream();
+            outputStream = new ByteArrayOutputStream(value.getWidth() * value.getHeight() * 4);
             value.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
             return outputStream.toByteArray();
         } catch (Exception e) {
