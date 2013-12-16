@@ -39,7 +39,7 @@
     <!-- 缺省的服务器配置 -->
     <integer name="server_port">5222</integer>
     <string name="server_host_ip">192.168.13.118</string>
-    <string name="xmpp_service_name">liuzh-ubuntu</string><string name="from_user_name">拨号帐号</string>
+    <string name="xmpp_service_name">liuzh-ubuntu</string><string name="from_user_name">拨号帐号</string><string name="server_name_txt">服务器名称：</string>
     <bool name="is_remember">true</bool>
 
 </resources>
