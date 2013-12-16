@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.shangkang.im.MainActivity;
@@ -18,6 +19,7 @@ import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smack.packet.XMPPError;
+import org.jivesoftware.smackx.OfflineMessageManager;
 
 import java.util.Collection;
 
@@ -28,6 +30,7 @@ import java.util.Collection;
  * @author Liuzh
  */
 public class LoginTask extends AsyncTask<String, Integer, Integer> {
+
     private ProgressDialog pd;
     private Context context;
     private MainActivity activitySupport;
@@ -70,6 +73,7 @@ public class LoginTask extends AsyncTask<String, Integer, Integer> {
                 Intent intent = new Intent();
                 intent.setClass(context, MsgListerService.class);
                 intent.putExtra(Constant.FROM_USER_NAME, loginConfig.getFromUserName());
+                intent.putExtra(Constant.XMPP_SEIVICE_NAME, loginConfig.getXmppServiceName());
                 activitySupport.saveLoginConfig(loginConfig);// 保存用户配置信息
 
                 context.startService(intent);
@@ -108,6 +112,11 @@ public class LoginTask extends AsyncTask<String, Integer, Integer> {
                     .getConnection();
             connection.connect();
             connection.login(username, password); // 登录
+
+            OfflineMessageManager offlineMessageManager = new OfflineMessageManager(connection);
+
+            offlineMessageManager.deleteMessages();
+
             connection.sendPacket(new Presence(Presence.Type.available));
             loginConfig.setUsername(username);
             if (loginConfig.isRemember()) {// 保存密码
