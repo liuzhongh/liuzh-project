@@ -180,7 +180,8 @@ public class MainActivity extends Activity {
                 Log.i(TAG, "Scroll>>>first: " + firstVisibleItem + ", visible: " + visibleItemCount + ",        total: " + totalItemCount);
 
                 //得到listview最后一项的id
-                int lastItemId = productList.getLastVisiblePosition();
+                int lastItemId = v.getLastVisiblePosition();
+                Log.d(TAG, "lastItemId :" + lastItemId);
                 //判断用户是否滑动到最后一项，因为索引值从零开始所以要加上1
                 if ((lastItemId + 1) == totalItemCount) {
                     /**
