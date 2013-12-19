@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" id="WebApp_ID" version="2.5">
+  <display-name>call-auto</display-name>
+  <listener>
+    <listener-class>org.directwebremoting.servlet.DwrListener</listener-class>
+  </listener>
+  <servlet>
+    <description>Direct Web Remoter Servlet</description>
+    <display-name>DWR Servlet</display-name>
+    <servlet-name>dwr-invoker</servlet-name>
+    <servlet-class>org.directwebremoting.servlet.DwrServlet</servlet-class>
+    <init-param>
+      <param-name>fileUploadMaxBytes</param-name>
+      <param-value>25000</param-value>
+    </init-param>
+    <init-param>
+      <param-name>debug</param-name>
+      <param-value>true</param-value>
+    </init-param>
+    <init-param>
+      <param-name>accessLogLevel</param-name>
+      <param-value>runtimeexception</param-value>
+    </init-param>
+    <init-param>
+      <param-name>activeReverseAjaxEnabled</param-name>
+      <param-value>true</param-value>
+    </init-param>
+    <init-param>
+      <param-name>initApplicationScopeCreatorsAtStartup</param-name>
+      <param-value>true</param-value>
+    </init-param>
+    <init-param>
+      <param-name>jsonRpcEnabled</param-name>
+      <param-value>true</param-value>
+    </init-param>
+    <init-param>
+      <param-name>jsonpEnabled</param-name>
+      <param-value>true</param-value>
+    </init-param>
+    <init-param>
+      <param-name>preferDataUrlSchema</param-name>
+      <param-value>false</param-value>
+    </init-param>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>dwr-invoker</servlet-name>
+    <url-pattern>/dwr/*</url-pattern>
+  </servlet-mapping>
+  <welcome-file-list>
+    <welcome-file>index.html</welcome-file>
+    <welcome-file>index.htm</welcome-file>
+    <welcome-file>index.jsp</welcome-file>
+    <welcome-file>default.html</welcome-file>
+    <welcome-file>default.htm</welcome-file>
+    <welcome-file>default.jsp</welcome-file>
+  </welcome-file-list>
+</web-app>
