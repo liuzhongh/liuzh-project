@@ -27,10 +27,10 @@ import com.shangkang.dto.ProductDetailDto;
 
 public interface ProductSearchFacade {
 
-	public abstract List<AutoCompletedDto> loadProductNamesResult(String keyword)
+	public abstract List<AutoCompletedDto> queryProductNamesResult(String keyword)
 			throws ServiceException;
 
-	public abstract Pagination<ProductDetailDto> loadProductResult(Pagination<ProductDetailDto> pagination, Map<String, String> queryCondition)
+	public abstract Pagination<ProductDetailDto> queryProductResult(Pagination<ProductDetailDto> pagination, Map<String, String> queryCondition)
 			throws ServiceException;
 
 	public abstract List<CommonType> listAreas() throws ServiceException;
