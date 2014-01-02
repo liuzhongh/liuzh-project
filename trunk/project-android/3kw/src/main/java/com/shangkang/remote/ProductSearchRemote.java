@@ -34,7 +34,7 @@ public class ProductSearchRemote {
             productSearchFacade = (ProductSearchFacade) ProductSearchRemote.loadRemote(
                     ProductSearchFacade.class, url);*/
 
-			return productSearchFacade.loadProductNamesResult(keyword);
+			return productSearchFacade.queryProductNamesResult(keyword);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -46,7 +46,7 @@ public class ProductSearchRemote {
     public Pagination<ProductDetailDto> loadProductDtosResult(Pagination<ProductDetailDto> pagination, Map<String, String> queryCondition)
     {
         try{
-            return productSearchFacade.loadProductResult(pagination, queryCondition);
+            return productSearchFacade.queryProductResult(pagination, queryCondition);
 
         } catch (Exception e){
             e.printStackTrace();
