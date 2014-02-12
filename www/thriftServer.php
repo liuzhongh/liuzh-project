@@ -21,7 +21,7 @@ use Thrift\Transport\TPhpStream;
 use Thrift\Transport\TBufferedTransport;
 
 require_once $THRIFT_ROOT . '/packages/com/test/service/impl/TestThriftServiceImpl.php';
-require_once $THRIFT_ROOT . '/packages/com/test/service/impl/TestThriftServiceTwoImpl.php';
+require_once $THRIFT_ROOT . '/packages/com/thrift/test/service/impl/PersonServiceImpl.php';
 
 /*class TestThriftServiceImpl implements TestThriftServiceIf {
 
@@ -45,12 +45,19 @@ if (php_sapi_name() == 'cli') {
 }
 
 $uri = $_REQUEST['srv'];
-$handler = 'com\\test\\service\\impl\\'.$uri;
+
+$package = 'com\\test\\service\\';
+
+if($uri == 'PersonServiceImpl')
+    $package = 'com\\thrift\\test\\service\\';
+
+$handler = $package.'impl\\'.$uri;
+
 $service = new $handler();
 $tmp = explode('Impl', $uri);
 
 //服务端接口处理类
-$class = 'com\\test\\service\\'.$tmp[0].'Processor';
+$class = $package.$tmp[0].'Processor';
 $processor = new $class($service);
 
 /*$handler = new com\test\service\impl\TestThriftServiceImpl();

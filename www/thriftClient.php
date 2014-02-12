@@ -23,7 +23,7 @@ use Thrift\Exception\TException;
 use com\test\service\TestThriftServiceClient;
 
 //require_once $THRIFT_ROOT . '/packages/com/test/service/TestThriftService.php';
-//require_once $THRIFT_ROOT . '/packages/com/test/service/Types.php';
+//require_once $THRIFT_ROOT . '/packages/com/test/service/PersonServiceTypes.php';
 
 try {
     $socket = new THttpClient($_SERVER['HTTP_HOST'], $_SERVER['SERVER_PORT'], '/thriftServer.php?srv=TestThriftServiceImpl');

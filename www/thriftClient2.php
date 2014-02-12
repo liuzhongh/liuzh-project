@@ -20,29 +20,28 @@ use Thrift\Protocol\TBinaryProtocol;
 use Thrift\Transport\THttpClient;
 use Thrift\Transport\TBufferedTransport;
 use Thrift\Exception\TException;
-use com\test\service\TestThriftServiceTwoClient;
+use com\thrift\test\bo\Person;
 
 //require_once $THRIFT_ROOT . '/packages/com/test/service/TestThriftService.php';
-require_once $THRIFT_ROOT . '/packages/com/test/service/TwoTypes.php';
 
 try {
-    $socket = new THttpClient($_SERVER['HTTP_HOST'], $_SERVER['SERVER_PORT'], '/thriftServer.php?srv=TestThriftServiceTwoImpl');
+    $socket = new THttpClient($_SERVER['HTTP_HOST'], $_SERVER['SERVER_PORT'], '/thriftServer.php?srv=PersonServiceImpl');
     $transport = new TBufferedTransport($socket, 1024, 1024);
     $protocol = new TBinaryProtocol($transport);
-    $client = new TestThriftServiceTwoClient($protocol);
+    $client = new \com\thrift\test\service\PersonServiceClient($protocol);
 
     $transport->open();
 
-    $val = $client->test1('weweew89');
+    $val = $client->getValue();
     var_dump($val);
 
-    $person = new com\test\service\Person();
+    $person = new Person();
 
     $person->name = 'name1';
-    $person->age = 32;
-    $person->password = 'password';
+    $person->age = 3122;
+    $person->passwod = 'pwd';
 
-    $val = $client->testPerson($person);
+    $val = $client->getPerson($person);
     var_dump($val);
 
     $transport->close();
