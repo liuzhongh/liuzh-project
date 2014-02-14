@@ -3,7 +3,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:0.6.+'
+        classpath 'com.android.tools.build:gradle:0.7.+'
     }
 }
 apply plugin: 'android'
@@ -13,10 +13,14 @@ repositories {
 }
 
 dependencies {
-    compile 'com.android.support:support-v4:18.0.0'
     compile files('libs/hessdroid.jar')
     compile files('libs/java-core.jar')
     compile files('libs/java-tools.jar')
+    compile files('libs/android-support-v4.jar')
+    compile files('libs/android-json-rpc-0.3.4.jar')
+    compile files('libs/libthrift-0.9.1.jar')
+    compile files('libs/slf4j-android-1.6.1-RC1.jar')
+    compile files('libs/gson-2.2.4.jar')
 }
 
 tasks.withType(Compile) {
@@ -24,8 +28,8 @@ tasks.withType(Compile) {
 }
 
 android {
-    compileSdkVersion 18
-    buildToolsVersion "18.1.1"
+    compileSdkVersion 19
+    buildToolsVersion '19.0.0'
 
     defaultConfig {
         minSdkVersion 7

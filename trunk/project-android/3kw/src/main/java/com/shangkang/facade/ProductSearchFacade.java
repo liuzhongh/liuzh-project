@@ -21,24 +21,24 @@ import java.util.Map;
 
 import com.shangkang.bo.CommonType;
 import com.shangkang.core.bo.Pagination;
-import com.shangkang.core.exception.ServiceException;
+import com.shangkang.core.exception.ServiceException1;
 import com.shangkang.dto.AutoCompletedDto;
 import com.shangkang.dto.ProductDetailDto;
 
 public interface ProductSearchFacade {
 
 	public abstract List<AutoCompletedDto> queryProductNamesResult(String keyword)
-			throws ServiceException;
+			throws ServiceException1;
 
 	public abstract Pagination<ProductDetailDto> queryProductResult(Pagination<ProductDetailDto> pagination, Map<String, String> queryCondition)
-			throws ServiceException;
+			throws ServiceException1;
 
-	public abstract List<CommonType> listAreas() throws ServiceException;
+	public abstract List<CommonType> listAreas() throws ServiceException1;
 
 	public abstract List<CommonType> queryProductEffByType(String productType)
-			throws ServiceException;
+			throws ServiceException1;
 
 	public abstract List<CommonType> queryAllProductTypeCommonType()
-			throws ServiceException;
+			throws ServiceException1;
 
 }

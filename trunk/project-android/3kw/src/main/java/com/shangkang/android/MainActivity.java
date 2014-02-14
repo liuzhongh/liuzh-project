@@ -131,7 +131,7 @@ public class MainActivity extends Activity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 String val = (String) MainActivity.this.autoCompleteTextView.getAdapter().getItem(i);
-                val = val.substring(0, val.indexOf("　　"));
+                val = val.substring(0, val.indexOf("   "));
 
                 autoCompleteTextView.setText(val);
                 autoCompleteTextView.clearListSelection();
