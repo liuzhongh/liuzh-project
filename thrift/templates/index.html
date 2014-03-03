@@ -1,0 +1,15 @@
+{% load cache %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>it is test</title>
+</head>
+<body>
+    {% include 'include_1.html' %}
+    {% cache 60 * 2 ps %}
+        name : {{ psr.name }}
+        {{ dt }}
+    {% endcache %}
+    <br/>
+</body>
+</html>
