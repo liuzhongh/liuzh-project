@@ -31,7 +31,7 @@
         android:completionThreshold="1"
         android:layout_alignParentLeft="true"
         android:popupBackground="#ffa6cb77"
-        android:textSize="10dp"
+        android:textSize="12dp"
         android:hint="@string/title_search_hint"
         android:layout_toLeftOf="@+id/button" />
 
