@@ -1,0 +1,93 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="org.news">
+
+    <uses-sdk
+        android:minSdkVersion="8"
+        android:targetSdkVersion="17" />
+
+    <uses-feature android:name="android.hardware.camera.autofocus" />
+
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.BROADCAST_STICKY"/>
+    <uses-permission android:name="android.permission.WRITE_SETTINGS"/>
+    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
+    <uses-permission android:name="android.permission.DISABLE_KEYGUARD"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.ACCESS_DOWNLOAD_MANAGER"/>
+    <uses-permission android:name="android.permission.DOWNLOAD_WITHOUT_NOTIFICATION" />
+
+    <application android:allowBackup="true"
+        android:label="@string/app_name"
+        android:icon="@drawable/ic_launcher"
+        android:theme="@style/customTheme">
+
+        <activity android:name="org.news.activity.NewsMainActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustPan"
+            android:launchMode="singleTask">
+        </activity>
+
+        <activity android:name="com.insthub.BeeFramework.activity.StartActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustPan">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity android:name="org.news.activity.SettingActivity"
+            android:screenOrientation="portrait" />
+
+        <activity android:name="org.news.activity.HelpActivity"
+            android:screenOrientation="portrait" />
+
+        <activity android:name="org.news.activity.HelpWebActivity"
+            android:screenOrientation="portrait" />
+
+        <activity android:name="com.insthub.BeeFramework.activity.FullScreenPhotoActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name="com.insthub.BeeFramework.activity.WebViewActivity"
+            android:screenOrientation="portrait"/>
+
+        <activity android:name="com.insthub.BeeFramework.activity.MemoryMessageActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name="com.insthub.BeeFramework.activity.DebugCancelDialogActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name="com.insthub.BeeFramework.activity.DebugDetailActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name="com.insthub.BeeFramework.activity.DebugMessageListActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name="com.insthub.BeeFramework.activity.DebugTabActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name="com.insthub.BeeFramework.activity.FloatViewSettingActivity"
+            android:screenOrientation="portrait" />
+
+        <activity android:name="org.news.activity.HelpListActivity"
+            android:screenOrientation="portrait"/>
+
+        <service android:name="com.insthub.BeeFramework.service.MemoryService" >
+            <intent-filter android:priority="1000" >
+                <action android:name="com.insthub.BeeFramework.service.MemoryService" />
+            </intent-filter>
+        </service>
+
+        <service android:name="com.insthub.BeeFramework.service.NetworkStateService" >
+            <intent-filter android:priority="1000" >
+                <action android:name="com.BeeFramework.NetworkStateService" />
+            </intent-filter>
+        </service>
+    </application>
+
+</manifest>
