@@ -16,15 +16,12 @@
  **/
 package com.shangkang.core.exception;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import com.shangkang.core.util.ResourceBundleMessageSourceHelper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public abstract class ApplicationException extends Exception {
-	
-	private Log				logger				= LogFactory
-			.getLog(getClass());
+	private Logger				logger				= LoggerFactory.getLogger(getClass());
 	
 	private String message;
 	
@@ -87,10 +84,13 @@ public abstract class ApplicationException extends Exception {
 			}catch(Exception e)
 			{
 				message = e.getMessage();
-				printExcStackTrace(e);		
+
+				if(message == null)
+					message = messageKey;
+//				printExcStackTrace(e);
 			}
 		}
-		
+
 		printExcStackTrace(exception);
 	}
 	
